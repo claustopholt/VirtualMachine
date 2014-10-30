@@ -4,4 +4,4 @@ STEP 1: This is a simple virtual machine, simulating a hypothetical microprocess
 
 Built for Python 2.7.
 
-Pre-requisites: Enum34.
+Pre-requisites: enum34.
