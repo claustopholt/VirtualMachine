@@ -6,13 +6,11 @@ grammar TestGrammar;
 
 // Parser rules.
 script
-    :	'script' '{' INTTYPE+ '}'
+    :	'script' '{' (ID '=' INT)+ '}'
     ;
 
 
 // Lexer rules.
-INTTYPE
-    :	'int' ;
 INT
     :   [0-9]+ ;
 ID

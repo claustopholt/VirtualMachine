@@ -11,11 +11,11 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
-        buf.write(u"\24\16\4\2\t\2\3\2\3\2\3\2\6\2\b\n\2\r\2\16\2\t\3\2\3")
-        buf.write(u"\2\3\2\2\2\3\2\2\2\r\2\4\3\2\2\2\4\5\7\4\2\2\5\7\7\3")
-        buf.write(u"\2\2\6\b\7\6\2\2\7\6\3\2\2\2\b\t\3\2\2\2\t\7\3\2\2\2")
-        buf.write(u"\t\n\3\2\2\2\n\13\3\2\2\2\13\f\7\5\2\2\f\3\3\2\2\2\3")
-        buf.write(u"\t")
+        buf.write(u"\24\20\4\2\t\2\3\2\3\2\3\2\3\2\3\2\6\2\n\n\2\r\2\16\2")
+        buf.write(u"\13\3\2\3\2\3\2\2\2\3\2\2\2\17\2\4\3\2\2\2\4\5\7\4\2")
+        buf.write(u"\2\5\t\7\3\2\2\6\7\7\b\2\2\7\b\7\5\2\2\b\n\7\7\2\2\t")
+        buf.write(u"\6\3\2\2\2\n\13\3\2\2\2\13\t\3\2\2\2\13\f\3\2\2\2\f\r")
+        buf.write(u"\3\2\2\2\r\16\7\6\2\2\16\3\3\2\2\2\3\13")
         return buf.getvalue()
 		
 
@@ -30,10 +30,10 @@ class TestGrammarParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     EOF = Token.EOF
-    T__2=1
-    T__1=2
-    T__0=3
-    INTTYPE=4
+    T__3=1
+    T__2=2
+    T__1=3
+    T__0=4
     INT=5
     ID=6
     MUL=7
@@ -49,10 +49,9 @@ class TestGrammarParser ( Parser ):
     COMMENT=17
     WHITESPACE=18
 
-    tokenNames = [ u"<INVALID>", u"'{'", u"'script'", u"'}'", u"'int'", 
-                   u"INT", u"ID", u"'*'", u"'/'", u"'+'", u"'-'", u"'>'", 
-                   u"'>='", u"'<'", u"'<='", u"'++'", u"'--'", u"COMMENT", 
-                   u"WHITESPACE" ]
+    tokenNames = [ u"<INVALID>", u"'{'", u"'script'", u"'='", u"'}'", u"INT", 
+                   u"ID", u"'*'", u"'/'", u"'+'", u"'-'", u"'>'", u"'>='", 
+                   u"'<'", u"'<='", u"'++'", u"'--'", u"COMMENT", u"WHITESPACE" ]
 
     RULE_script = 0
 
@@ -72,11 +71,17 @@ class TestGrammarParser ( Parser ):
             super(TestGrammarParser.ScriptContext, self).__init__(parent, invokingState)
             self.parser = parser
 
-        def INTTYPE(self, i=None):
+        def INT(self, i=None):
             if i is None:
-                return self.getTokens(TestGrammarParser.INTTYPE)
+                return self.getTokens(TestGrammarParser.INT)
             else:
-                return self.getToken(TestGrammarParser.INTTYPE, i)
+                return self.getToken(TestGrammarParser.INT, i)
+
+        def ID(self, i=None):
+            if i is None:
+                return self.getTokens(TestGrammarParser.ID)
+            else:
+                return self.getToken(TestGrammarParser.ID, i)
 
         def getRuleIndex(self):
             return TestGrammarParser.RULE_script
@@ -100,22 +105,26 @@ class TestGrammarParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 2
-            self.match(self.T__1)
-            self.state = 3
             self.match(self.T__2)
-            self.state = 5 
+            self.state = 3
+            self.match(self.T__3)
+            self.state = 7 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
                 self.state = 4
-                self.match(self.INTTYPE)
-                self.state = 7 
+                self.match(self.ID)
+                self.state = 5
+                self.match(self.T__1)
+                self.state = 6
+                self.match(self.INT)
+                self.state = 9 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not (_la==TestGrammarParser.INTTYPE):
+                if not (_la==TestGrammarParser.ID):
                     break
 
-            self.state = 9
+            self.state = 11
             self.match(self.T__0)
         except RecognitionException as re:
             localctx.exception = re
