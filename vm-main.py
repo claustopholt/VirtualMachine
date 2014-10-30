@@ -1,7 +1,13 @@
+from antlr4 import FileStream
 from opcode import Opcode
 from cpu import Cpu
+import TestLanguage
 
 if __name__ == "__main__":
+
+    # Load sourcecode from text file and compile.
+    sourcecode = FileStream("example-source.txt")
+    bytecodes = TestLanguage.compile(sourcecode)
 
     # A simple test program that counts to 20.
     code = [Opcode.iconst.value, 10,     # Push integer 10 onto the stack.
