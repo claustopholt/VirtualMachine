@@ -1,0 +1,11 @@
+# Example source code to be compiled for the VirtualMachine.
+
+a = 10
+b = 2
+
+while a < 20
+{
+    a = a + (b * 2) - 3
+    print(a)
+}
+
