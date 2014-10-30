@@ -35,11 +35,11 @@ class Cpu():
                 opcode = Opcode._value2member_map_[opcode_word]
                 self.pc += 2
 
-                if opcode == Opcode.iconst:
+                if opcode == Opcode.int:
                     self.mem[self.sp:self.sp + 2] = self.mem[self.pc:self.pc + 2]
                     self.pc += 2
                     self.sp += 2
-                elif opcode == Opcode.iadd:
+                elif opcode == Opcode.add:
                     self.sp -= 2
                     pop1 = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
                     self.sp -= 2
@@ -47,7 +47,7 @@ class Cpu():
                     res = pop1 + pop2
                     self.mem[self.sp:self.sp + 2] = struct.pack("h", res)
                     self.sp += 2
-                elif opcode == Opcode.ioutput:
+                elif opcode == Opcode.output:
                     self.sp -= 2
                     pop1 = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
                     sys.stdout.write("{0}\r\n".format(pop1))
@@ -111,15 +111,15 @@ class Cpu():
             output += "{0:02x}{1:02x} ".format(self.mem[address], self.mem[address + 1])
             address += 2
 
-            if opcode == Opcode.iconst:
+            if opcode == Opcode.int:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
                 output += "{0:02x}{1:02x}       ICONST   {2}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      arg_word)
                 address += 2
-            elif opcode == Opcode.iadd:
+            elif opcode == Opcode.add:
                 output += "           ADD"
-            elif opcode == Opcode.ioutput:
+            elif opcode == Opcode.output:
                 output += "           OUTPUT"
             elif opcode == Opcode.call:
                 arg_word1 = struct.unpack("h", str(self.mem[address:address + 2]))[0]
