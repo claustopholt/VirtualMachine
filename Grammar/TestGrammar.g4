@@ -6,9 +6,12 @@ grammar TestGrammar;
 
 // Parser rules.
 script
-    :	'script' '{' (ID '=' INT)+ '}'
+    :	'script' '{' varAssign+ '}'
     ;
 
+varAssign
+    :   ID '=' INT
+    ;
 
 // Lexer rules.
 INT

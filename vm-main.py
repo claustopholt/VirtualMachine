@@ -5,7 +5,7 @@ import TestLanguage
 
 if __name__ == "__main__":
 
-    # Load sourcecode from text file and compile.
+    # Load sourcecode and compile to bytecodes.
     sourcecode = FileStream("example-source.txt")
     bytecodes = TestLanguage.compile(sourcecode)
 
@@ -29,14 +29,14 @@ if __name__ == "__main__":
 
     # Display start memory.
     cpu.print_disassembly()
-    cpu.print_mem()
-    cpu.print_registers()
+    #cpu.print_mem()
+    #cpu.print_registers()
 
     # Execute program.
-    cpu.execute_program()
+    #cpu.execute_program()
 
     # Display resulting memory.
-    cpu.print_mem()
-    cpu.print_registers()
+    #cpu.print_mem()
+    #cpu.print_registers()
 
 
