@@ -9,6 +9,8 @@ class MyListener(TestGrammarListener):
     context_properties = {}
     bytecodes = []
 
+    #region Helpers
+
     def helper_create_label(self):
         label = "Label{}".format(len(self.labels))
         self.labels.append(label)
@@ -21,6 +23,9 @@ class MyListener(TestGrammarListener):
             if str(bytecode) == label:
                 self.bytecodes[index] = offset
 
+    #endregion
+
+    #region Script
 
     def enterScript(self, ctx):
         pass
@@ -30,6 +35,10 @@ class MyListener(TestGrammarListener):
         #print(self.context_properties)
         #print(self.labels)
         print(self.bytecodes)
+
+    #endregion
+
+    #region Variables and expressions
 
     def exitVarAssign(self, ctx):
         name = ctx.ID().getText()
@@ -71,79 +80,68 @@ class MyListener(TestGrammarListener):
         self.bytecodes.append(Opcode.brancheq.value)
         self.bytecodes.append(true_label)
 
-        # False
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(Opcode.int.value)     # False
         self.bytecodes.append(0)
         self.bytecodes.append(Opcode.branch.value)
         self.bytecodes.append(done_label)
 
-        # True
-        self.helper_mark_label(true_label)
+        self.helper_mark_label(true_label)          # True
         self.bytecodes.append(Opcode.int.value)
         self.bytecodes.append(1)
 
-        # Done
-        self.helper_mark_label(done_label)
+        self.helper_mark_label(done_label)          # Done
 
     def exitNotEqualExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
         self.bytecodes.append(Opcode.branchne.value)
         self.bytecodes.append(true_label)
 
-        # False
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(Opcode.int.value)     # False
         self.bytecodes.append(0)
         self.bytecodes.append(Opcode.branch.value)
         self.bytecodes.append(done_label)
 
-        # True
-        self.helper_mark_label(true_label)
+        self.helper_mark_label(true_label)          # True
         self.bytecodes.append(Opcode.int.value)
         self.bytecodes.append(1)
 
-        # Done
-        self.helper_mark_label(done_label)
+        self.helper_mark_label(done_label)          # Done
 
     def exitGtExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
         self.bytecodes.append(Opcode.branchgt.value)
         self.bytecodes.append(true_label)
 
-        # False
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(Opcode.int.value)     # False
         self.bytecodes.append(0)
         self.bytecodes.append(Opcode.branch.value)
         self.bytecodes.append(done_label)
 
-        # True
-        self.helper_mark_label(true_label)
+        self.helper_mark_label(true_label)          # True
         self.bytecodes.append(Opcode.int.value)
         self.bytecodes.append(1)
 
-        # Done
-        self.helper_mark_label(done_label)
+        self.helper_mark_label(done_label)          # Done
 
     def exitLtExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
         self.bytecodes.append(Opcode.branchlt.value)
         self.bytecodes.append(true_label)
 
-        # False
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(Opcode.int.value)     # False
         self.bytecodes.append(0)
         self.bytecodes.append(Opcode.branch.value)
         self.bytecodes.append(done_label)
 
-        # True
-        self.helper_mark_label(true_label)
+        self.helper_mark_label(true_label)          # True
         self.bytecodes.append(Opcode.int.value)
         self.bytecodes.append(1)
 
-        # Done
-        self.helper_mark_label(done_label)
+        self.helper_mark_label(done_label)          # Done
 
+    #endregion
 
-
+    #region If..else
 
     def enterIfStatement(self, ctx):
         # Create three labels (true, false, done) and store in contex properties.
@@ -153,10 +151,14 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
 
+    #endregion
 
-
-
+    #region Function calls
 
     def exitOutputCall(self, ctx):
         self.bytecodes.append(Opcode.output.value)
+        pass
 
+    #endregion
+
+    pass

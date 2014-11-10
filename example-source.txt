@@ -2,7 +2,8 @@
 
 script
 {
-    a = (5 > 1 + 1);
+    a = (5 == (2 < 1));
+    a = a + 1;
 
     # Add some values to two variables.
     #a = 2;
