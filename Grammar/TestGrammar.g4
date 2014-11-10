@@ -13,6 +13,7 @@ script
 statement
     :	varAssign
     |	ifStatement
+    |   whileStatement
     |   outputCall
     |	expr ';'
     ;
@@ -38,12 +39,20 @@ ifFalseBlock
     ;
 
 ifBlock
-    :	'{' (statement|breakWord)* '}'
+    :	'{' (statement)* '}'
     ;
 
-breakWord
-    :   'break' ';'
-    ;
+whileStatement
+	:	'while' '(' whileCondition ')' whileBlock
+	;
+
+whileCondition
+	:	expr
+	;
+
+whileBlock
+	:	'{' (statement)* '}'
+	;
 
 outputCall
     :   'output' '(' expr ')' ';'

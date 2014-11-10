@@ -147,7 +147,6 @@ class MyListener(TestGrammarListener):
     def enterIfStatement(self, ctx):
         # Create three labels (true, false, done) and store in contex properties.
         self.context_properties[ctx] = [self.helper_create_label() for _ in xrange(3)]
-        print(self.context_properties)
 
     def exitIfCondition(self, ctx):
         # Get true, false and done labels from context properties.
@@ -194,6 +193,46 @@ class MyListener(TestGrammarListener):
 
         self.helper_mark_label(done_label)
 
+    #endregion
+
+    #region While
+
+    def enterWhileStatement(self, ctx):
+        # Create three labels (begin, true, done) and store in contex properties.
+        true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
+
+        # Manually create begin_label (current offset), which also marks it.
+        begin_label = len(self.bytecodes)
+        self.context_properties[ctx] = [begin_label, true_label, done_label]
+
+    def exitWhileCondition(self, ctx):
+        # Get true, false and done labels from context properties.
+        begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.bytecodes.append(Opcode.brancheq.value)    # True
+        self.bytecodes.append(true_label)
+
+        self.bytecodes.append(Opcode.branch.value)      # False (meaning: Done)
+        self.bytecodes.append(done_label)
+
+    def enterWhileBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.helper_mark_label(true_label)
+
+    def exitWhileBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(begin_label)
+
+    def exitWhileStatement(self, ctx):
+        # Get true, false and done labels from context properties.
+        begin_label, true_label, done_label = self.context_properties[ctx]
+
+        self.helper_mark_label(done_label)
 
     #endregion
 

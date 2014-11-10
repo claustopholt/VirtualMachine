@@ -13,21 +13,57 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by TestGrammarParser#idExpr.
+    def enterIdExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#idExpr.
+    def exitIdExpr(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#GtExpr.
+    def enterGtExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#GtExpr.
+    def exitGtExpr(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#EqualExpr.
+    def enterEqualExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#EqualExpr.
+    def exitEqualExpr(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#varAssign.
+    def enterVarAssign(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#varAssign.
+    def exitVarAssign(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#whileBlock.
+    def enterWhileBlock(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#whileBlock.
+    def exitWhileBlock(self, ctx):
+        pass
+
+
     # Enter a parse tree produced by TestGrammarParser#SubExpr.
     def enterSubExpr(self, ctx):
         pass
 
     # Exit a parse tree produced by TestGrammarParser#SubExpr.
     def exitSubExpr(self, ctx):
-        pass
-
-
-    # Enter a parse tree produced by TestGrammarParser#IdExprWrapper.
-    def enterIdExprWrapper(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#IdExprWrapper.
-    def exitIdExprWrapper(self, ctx):
         pass
 
 
@@ -40,12 +76,12 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#ifCondition.
-    def enterIfCondition(self, ctx):
+    # Enter a parse tree produced by TestGrammarParser#IdExprWrapper.
+    def enterIdExprWrapper(self, ctx):
         pass
 
-    # Exit a parse tree produced by TestGrammarParser#ifCondition.
-    def exitIfCondition(self, ctx):
+    # Exit a parse tree produced by TestGrammarParser#IdExprWrapper.
+    def exitIdExprWrapper(self, ctx):
         pass
 
 
@@ -58,12 +94,12 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#idExpr.
-    def enterIdExpr(self, ctx):
+    # Enter a parse tree produced by TestGrammarParser#ifCondition.
+    def enterIfCondition(self, ctx):
         pass
 
-    # Exit a parse tree produced by TestGrammarParser#idExpr.
-    def exitIdExpr(self, ctx):
+    # Exit a parse tree produced by TestGrammarParser#ifCondition.
+    def exitIfCondition(self, ctx):
         pass
 
 
@@ -103,21 +139,21 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#IntExprWrapper.
-    def enterIntExprWrapper(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#IntExprWrapper.
-    def exitIntExprWrapper(self, ctx):
-        pass
-
-
     # Enter a parse tree produced by TestGrammarParser#script.
     def enterScript(self, ctx):
         pass
 
     # Exit a parse tree produced by TestGrammarParser#script.
     def exitScript(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#IntExprWrapper.
+    def enterIntExprWrapper(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#IntExprWrapper.
+    def exitIntExprWrapper(self, ctx):
         pass
 
 
@@ -166,39 +202,21 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#GtExpr.
-    def enterGtExpr(self, ctx):
+    # Enter a parse tree produced by TestGrammarParser#whileStatement.
+    def enterWhileStatement(self, ctx):
         pass
 
-    # Exit a parse tree produced by TestGrammarParser#GtExpr.
-    def exitGtExpr(self, ctx):
-        pass
-
-
-    # Enter a parse tree produced by TestGrammarParser#breakWord.
-    def enterBreakWord(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#breakWord.
-    def exitBreakWord(self, ctx):
+    # Exit a parse tree produced by TestGrammarParser#whileStatement.
+    def exitWhileStatement(self, ctx):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#EqualExpr.
-    def enterEqualExpr(self, ctx):
+    # Enter a parse tree produced by TestGrammarParser#whileCondition.
+    def enterWhileCondition(self, ctx):
         pass
 
-    # Exit a parse tree produced by TestGrammarParser#EqualExpr.
-    def exitEqualExpr(self, ctx):
-        pass
-
-
-    # Enter a parse tree produced by TestGrammarParser#varAssign.
-    def enterVarAssign(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#varAssign.
-    def exitVarAssign(self, ctx):
+    # Exit a parse tree produced by TestGrammarParser#whileCondition.
+    def exitWhileCondition(self, ctx):
         pass
 
 
