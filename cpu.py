@@ -17,15 +17,15 @@ class Cpu():
         # Create a memory block to hold stack, code and data. self.mem is the "master" of all cpu operations.
         self.mem = bytearray(self.mem_size)
 
+        # Create stack pointer and program counter.
+        self.sp = stack_start_address
+        self.pc = program_start_address
+
         # Convert code to bytes and and store in self.mem.
         # x64 is little-endinan, so 1000 decimal = 0x03e8 is stored as e803 and 10 decimal = 0a, stored as 0a00.
         program_bytes = struct.pack("{0}h".format(len(code)), *code)
         self.mem[program_start_address:program_start_address + len(program_bytes)] = program_bytes
         self.program_size = len(program_bytes)
-
-        # Create stack pointer and program counter.
-        self.sp = stack_start_address        # Stack pointer.
-        self.pc = program_start_address      # Program counter.
 
         # Create an output stream.
         self.out_stream = io.StringIO()

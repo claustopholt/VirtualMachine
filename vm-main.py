@@ -8,12 +8,8 @@ if __name__ == "__main__":
     sourcecode = FileStream("example-source.txt")
     bytecodes = TestLanguage.compile_code(sourcecode)
 
-    # Instantiate a CPU.
-    cpu = Cpu(bytecodes,
-              512,  # Mem size
-              128,  # Code start address
-              0,    # Stack start address
-              384)  # Data start address
+    # Instantiate a CPU with bytecodes, mem size, code addr, stack addr and data addr.
+    cpu = Cpu(bytecodes, 512, 128, 0, 384)
 
     # Display start memory.
     cpu.print_disassembly()
