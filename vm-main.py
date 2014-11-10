@@ -3,6 +3,8 @@ from cpu import Cpu
 
 if __name__ == "__main__":
 
+    # TODO: Flask + WebSockets + workers + Redis
+
     # A simple test program that counts to 20.
     code = [Opcode.int.value, 10,     # Push integer 10 onto the stack.
             Opcode.int.value, 1,      # Push integer 1 onto the stack.
