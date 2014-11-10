@@ -44,7 +44,7 @@ class Cpu():
         self.pc += 2
         return code_value
 
-    def data_store(self, offset, value):
+    def data_set(self, offset, value):
         addr = self.data_start_address + (offset * 2)
         self.mem[addr:addr + 2] = struct.pack("h", value)
 
@@ -86,21 +86,35 @@ class Cpu():
                     sys.stdout.write("{0}\r\n".format(pop1_value))
                 elif opcode == Opcode.branch:
                     offset = self.code_next()
-                    self.pc += offset
-                    if self.pc >= self.mem_size:
-                        self.pc -= self.mem_size
+                    self.pc = self.program_start_address + (offset * 2)
                 elif opcode == Opcode.branchne:
-                    pop = self.stack_pop()
-                    peek = self.stack_peek()
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
                     offset = self.code_next()
-                    if pop != peek:
-                        self.pc += offset
-                        if self.pc >= self.mem_size:
-                            self.pc -= self.mem_size
+                    if pop1_value != pop2_value:
+                        self.pc = self.program_start_address + (offset * 2)
+                elif opcode == Opcode.brancheq:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    offset = self.code_next()
+                    if pop1_value == pop2_value:
+                        self.pc = self.program_start_address + (offset * 2)
+                elif opcode == Opcode.branchgt:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    offset = self.code_next()
+                    if pop2_value > pop1_value:
+                        self.pc = self.program_start_address + (offset * 2)
+                elif opcode == Opcode.branchlt:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    offset = self.code_next()
+                    if pop2_value < pop1_value:
+                        self.pc = self.program_start_address + (offset * 2)
                 elif opcode == Opcode.stfld:
                     offset = self.code_next()
                     pop_value = self.stack_pop()
-                    self.data_store(offset, pop_value)
+                    self.data_set(offset, pop_value)
                 elif opcode == Opcode.ldfld:
                     offset = self.code_next()
                     value = self.data_get(offset)

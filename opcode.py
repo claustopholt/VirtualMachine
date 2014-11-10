@@ -7,7 +7,7 @@ class Opcode(Enum):
     sub = 9912            # Pop two integers off stack and subtract, push result onto stack
     mul = 9913            # Pop two integers off stack and multiply, push result onto stack
     div = 9914            # Pop two integers off stack and divide, push result onto stack
-    branch = 9930         # jump to memory address offset, a simple branch ("branch 0a00" will branch 10 bytes forward)
+    branch = 9930         # jump to memory address offset in code memory
     branchne = 9931       # Branch if not equal
     brancheq = 9932       # Branch if equal
     branchgt = 9933       # Branch if greater than

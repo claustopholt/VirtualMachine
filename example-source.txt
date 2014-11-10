@@ -2,7 +2,6 @@
 
 script
 {
-    a = 10;
-    b = a * 2;
-    output (a + b);
+    a = 10 != 10;
+    output (a);
 }
