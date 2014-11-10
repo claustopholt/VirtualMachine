@@ -2,12 +2,18 @@
 
 script
 {
-    # Add some values to two variables.
-    a = 2;
-    b = 10 - (8 / 2);
+    a = (5 > 1 + 1);
 
-    # Output the result of a simple calculation.
-    output(a + b);
+    # Add some values to two variables.
+    #a = 2;
+    #b = 10 - (8 / 2);
+
+    #if (a == 2)
+    #{
+        #output(a + b);
+    #}
+
+    #output(123);
 
     #while a < 20
     #{

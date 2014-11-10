@@ -56,8 +56,8 @@ expr
     |	expr DIV expr			#DivExpr
     |	expr EQUALS expr		#EqualExpr
     |	expr NOTEQUALS expr		#NotEqualExpr
-    |	expr (GT|GTE) expr		#GtGteExpr
-    |	expr (LT|LTE) expr		#LtLteExpr
+    |	expr GT expr		    #GtExpr
+    |	expr LT expr		    #LtExpr
     |	idExpr					#IdExprWrapper
     |	intExpr					#IntExprWrapper
     |	'(' expr ')'			#ParensExpr

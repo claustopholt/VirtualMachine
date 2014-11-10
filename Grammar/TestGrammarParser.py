@@ -22,34 +22,34 @@ def serializedATN():
         buf.write(u"\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f")
         buf.write(u"\3\f\3\f\3\f\3\f\7\fv\n\f\f\f\16\fy\13\f\3\r\3\r\3\16")
         buf.write(u"\3\16\3\16\2\3\26\17\2\4\6\b\n\f\16\20\22\24\26\30\32")
-        buf.write(u"\2\4\3\2\26\27\3\2\30\31\u0082\2\34\3\2\2\2\4+\3\2\2")
-        buf.write(u"\2\6-\3\2\2\2\b\62\3\2\2\2\n;\3\2\2\2\f=\3\2\2\2\16?")
-        buf.write(u"\3\2\2\2\20A\3\2\2\2\22K\3\2\2\2\24N\3\2\2\2\26[\3\2")
-        buf.write(u"\2\2\30z\3\2\2\2\32|\3\2\2\2\34\35\7\7\2\2\35\37\7\3")
-        buf.write(u"\2\2\36 \5\4\3\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2")
-        buf.write(u"!\"\3\2\2\2\"#\3\2\2\2#$\7\f\2\2$\3\3\2\2\2%,\5\6\4\2")
-        buf.write(u"&,\5\b\5\2\',\5\24\13\2()\5\26\f\2)*\7\r\2\2*,\3\2\2")
-        buf.write(u"\2+%\3\2\2\2+&\3\2\2\2+\'\3\2\2\2+(\3\2\2\2,\5\3\2\2")
-        buf.write(u"\2-.\7\17\2\2./\7\13\2\2/\60\5\26\f\2\60\61\7\r\2\2\61")
-        buf.write(u"\7\3\2\2\2\62\63\7\t\2\2\63\64\7\b\2\2\64\65\5\n\6\2")
-        buf.write(u"\65\66\7\4\2\2\669\5\f\7\2\678\7\n\2\28:\5\16\b\29\67")
-        buf.write(u"\3\2\2\29:\3\2\2\2:\t\3\2\2\2;<\5\26\f\2<\13\3\2\2\2")
-        buf.write(u"=>\5\20\t\2>\r\3\2\2\2?@\5\20\t\2@\17\3\2\2\2AF\7\3\2")
-        buf.write(u"\2BE\5\4\3\2CE\5\22\n\2DB\3\2\2\2DC\3\2\2\2EH\3\2\2\2")
-        buf.write(u"FD\3\2\2\2FG\3\2\2\2GI\3\2\2\2HF\3\2\2\2IJ\7\f\2\2J\21")
-        buf.write(u"\3\2\2\2KL\7\5\2\2LM\7\r\2\2M\23\3\2\2\2NO\7\6\2\2OP")
-        buf.write(u"\7\b\2\2PQ\5\26\f\2QR\7\4\2\2RS\7\r\2\2S\25\3\2\2\2T")
-        buf.write(u"U\b\f\1\2U\\\5\30\r\2V\\\5\32\16\2WX\7\b\2\2XY\5\26\f")
-        buf.write(u"\2YZ\7\4\2\2Z\\\3\2\2\2[T\3\2\2\2[V\3\2\2\2[W\3\2\2\2")
-        buf.write(u"\\w\3\2\2\2]^\f\r\2\2^_\7\22\2\2_v\5\26\f\16`a\f\f\2")
-        buf.write(u"\2ab\7\23\2\2bv\5\26\f\rcd\f\13\2\2de\7\20\2\2ev\5\26")
-        buf.write(u"\f\ffg\f\n\2\2gh\7\21\2\2hv\5\26\f\13ij\f\t\2\2jk\7\24")
-        buf.write(u"\2\2kv\5\26\f\nlm\f\b\2\2mn\7\25\2\2nv\5\26\f\top\f\7")
-        buf.write(u"\2\2pq\t\2\2\2qv\5\26\f\brs\f\6\2\2st\t\3\2\2tv\5\26")
-        buf.write(u"\f\7u]\3\2\2\2u`\3\2\2\2uc\3\2\2\2uf\3\2\2\2ui\3\2\2")
-        buf.write(u"\2ul\3\2\2\2uo\3\2\2\2ur\3\2\2\2vy\3\2\2\2wu\3\2\2\2")
-        buf.write(u"wx\3\2\2\2x\27\3\2\2\2yw\3\2\2\2z{\7\17\2\2{\31\3\2\2")
-        buf.write(u"\2|}\7\16\2\2}\33\3\2\2\2\n!+9DF[uw")
+        buf.write(u"\2\2\u0082\2\34\3\2\2\2\4+\3\2\2\2\6-\3\2\2\2\b\62\3")
+        buf.write(u"\2\2\2\n;\3\2\2\2\f=\3\2\2\2\16?\3\2\2\2\20A\3\2\2\2")
+        buf.write(u"\22K\3\2\2\2\24N\3\2\2\2\26[\3\2\2\2\30z\3\2\2\2\32|")
+        buf.write(u"\3\2\2\2\34\35\7\7\2\2\35\37\7\3\2\2\36 \5\4\3\2\37\36")
+        buf.write(u"\3\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"#\3\2\2\2")
+        buf.write(u"#$\7\f\2\2$\3\3\2\2\2%,\5\6\4\2&,\5\b\5\2\',\5\24\13")
+        buf.write(u"\2()\5\26\f\2)*\7\r\2\2*,\3\2\2\2+%\3\2\2\2+&\3\2\2\2")
+        buf.write(u"+\'\3\2\2\2+(\3\2\2\2,\5\3\2\2\2-.\7\17\2\2./\7\13\2")
+        buf.write(u"\2/\60\5\26\f\2\60\61\7\r\2\2\61\7\3\2\2\2\62\63\7\t")
+        buf.write(u"\2\2\63\64\7\b\2\2\64\65\5\n\6\2\65\66\7\4\2\2\669\5")
+        buf.write(u"\f\7\2\678\7\n\2\28:\5\16\b\29\67\3\2\2\29:\3\2\2\2:")
+        buf.write(u"\t\3\2\2\2;<\5\26\f\2<\13\3\2\2\2=>\5\20\t\2>\r\3\2\2")
+        buf.write(u"\2?@\5\20\t\2@\17\3\2\2\2AF\7\3\2\2BE\5\4\3\2CE\5\22")
+        buf.write(u"\n\2DB\3\2\2\2DC\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2")
+        buf.write(u"\2GI\3\2\2\2HF\3\2\2\2IJ\7\f\2\2J\21\3\2\2\2KL\7\5\2")
+        buf.write(u"\2LM\7\r\2\2M\23\3\2\2\2NO\7\6\2\2OP\7\b\2\2PQ\5\26\f")
+        buf.write(u"\2QR\7\4\2\2RS\7\r\2\2S\25\3\2\2\2TU\b\f\1\2U\\\5\30")
+        buf.write(u"\r\2V\\\5\32\16\2WX\7\b\2\2XY\5\26\f\2YZ\7\4\2\2Z\\\3")
+        buf.write(u"\2\2\2[T\3\2\2\2[V\3\2\2\2[W\3\2\2\2\\w\3\2\2\2]^\f\r")
+        buf.write(u"\2\2^_\7\22\2\2_v\5\26\f\16`a\f\f\2\2ab\7\23\2\2bv\5")
+        buf.write(u"\26\f\rcd\f\13\2\2de\7\20\2\2ev\5\26\f\ffg\f\n\2\2gh")
+        buf.write(u"\7\21\2\2hv\5\26\f\13ij\f\t\2\2jk\7\24\2\2kv\5\26\f\n")
+        buf.write(u"lm\f\b\2\2mn\7\25\2\2nv\5\26\f\top\f\7\2\2pq\7\26\2\2")
+        buf.write(u"qv\5\26\f\brs\f\6\2\2st\7\30\2\2tv\5\26\f\7u]\3\2\2\2")
+        buf.write(u"u`\3\2\2\2uc\3\2\2\2uf\3\2\2\2ui\3\2\2\2ul\3\2\2\2uo")
+        buf.write(u"\3\2\2\2ur\3\2\2\2vy\3\2\2\2wu\3\2\2\2wx\3\2\2\2x\27")
+        buf.write(u"\3\2\2\2yw\3\2\2\2z{\7\17\2\2{\31\3\2\2\2|}\7\16\2\2")
+        buf.write(u"}\33\3\2\2\2\n!+9DF[uw")
         return buf.getvalue()
 		
 
@@ -673,32 +673,6 @@ class TestGrammarParser ( Parser ):
             super(TestGrammarParser.ExprContext, self).copyFrom(ctx)
 
 
-    class LtLteExprContext(ExprContext):
-
-        def __init__(self, parser, ctx): # actually a TestGrammarParser.ExprContext)
-            super(TestGrammarParser.LtLteExprContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def LT(self):
-            return self.getToken(TestGrammarParser.LT, 0)
-        def LTE(self):
-            return self.getToken(TestGrammarParser.LTE, 0)
-        def expr(self, i=None):
-            if i is None:
-                return self.getTypedRuleContexts(TestGrammarParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(TestGrammarParser.ExprContext,i)
-
-
-        def enterRule(self, listener):
-            if isinstance( listener, TestGrammarListener ):
-                listener.enterLtLteExpr(self)
-
-        def exitRule(self, listener):
-            if isinstance( listener, TestGrammarListener ):
-                listener.exitLtLteExpr(self)
-
-
     class DivExprContext(ExprContext):
 
         def __init__(self, parser, ctx): # actually a TestGrammarParser.ExprContext)
@@ -790,14 +764,12 @@ class TestGrammarParser ( Parser ):
                 listener.exitIdExprWrapper(self)
 
 
-    class GtGteExprContext(ExprContext):
+    class GtExprContext(ExprContext):
 
         def __init__(self, parser, ctx): # actually a TestGrammarParser.ExprContext)
-            super(TestGrammarParser.GtGteExprContext, self).__init__(parser)
+            super(TestGrammarParser.GtExprContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def GTE(self):
-            return self.getToken(TestGrammarParser.GTE, 0)
         def expr(self, i=None):
             if i is None:
                 return self.getTypedRuleContexts(TestGrammarParser.ExprContext)
@@ -809,11 +781,11 @@ class TestGrammarParser ( Parser ):
 
         def enterRule(self, listener):
             if isinstance( listener, TestGrammarListener ):
-                listener.enterGtGteExpr(self)
+                listener.enterGtExpr(self)
 
         def exitRule(self, listener):
             if isinstance( listener, TestGrammarListener ):
-                listener.exitGtGteExpr(self)
+                listener.exitGtExpr(self)
 
 
     class AddExprContext(ExprContext):
@@ -883,6 +855,30 @@ class TestGrammarParser ( Parser ):
                 listener.exitParensExpr(self)
 
 
+    class LtExprContext(ExprContext):
+
+        def __init__(self, parser, ctx): # actually a TestGrammarParser.ExprContext)
+            super(TestGrammarParser.LtExprContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def LT(self):
+            return self.getToken(TestGrammarParser.LT, 0)
+        def expr(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(TestGrammarParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(TestGrammarParser.ExprContext,i)
+
+
+        def enterRule(self, listener):
+            if isinstance( listener, TestGrammarListener ):
+                listener.enterLtExpr(self)
+
+        def exitRule(self, listener):
+            if isinstance( listener, TestGrammarListener ):
+                listener.exitLtExpr(self)
+
+
     class IntExprWrapperContext(ExprContext):
 
         def __init__(self, parser, ctx): # actually a TestGrammarParser.ExprContext)
@@ -934,7 +930,6 @@ class TestGrammarParser ( Parser ):
         _prevctx = localctx
         _startState = 20
         self.enterRecursionRule(localctx, 20, self.RULE_expr, _p)
-        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 89
@@ -1052,31 +1047,25 @@ class TestGrammarParser ( Parser ):
                         pass
 
                     elif la_ == 7:
-                        localctx = TestGrammarParser.GtGteExprContext(self, TestGrammarParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = TestGrammarParser.GtExprContext(self, TestGrammarParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 109
                         if not self.precpred(self._ctx, 5):
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 110
-                        _la = self._input.LA(1)
-                        if not(_la==TestGrammarParser.GT or _la==TestGrammarParser.GTE):
-                            self._errHandler.recoverInline(self)
-                        self.consume()
+                        self.match(self.GT)
                         self.state = 111 
                         self.expr(6)
                         pass
 
                     elif la_ == 8:
-                        localctx = TestGrammarParser.LtLteExprContext(self, TestGrammarParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = TestGrammarParser.LtExprContext(self, TestGrammarParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 112
                         if not self.precpred(self._ctx, 4):
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 113
-                        _la = self._input.LA(1)
-                        if not(_la==TestGrammarParser.LT or _la==TestGrammarParser.LTE):
-                            self._errHandler.recoverInline(self)
-                        self.consume()
+                        self.match(self.LT)
                         self.state = 114 
                         self.expr(5)
                         pass

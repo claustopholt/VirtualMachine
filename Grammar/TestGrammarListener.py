@@ -4,21 +4,21 @@ from antlr4 import *
 # This class defines a complete listener for a parse tree produced by TestGrammarParser.
 class TestGrammarListener(ParseTreeListener):
 
-    # Enter a parse tree produced by TestGrammarParser#SubExpr.
-    def enterSubExpr(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#SubExpr.
-    def exitSubExpr(self, ctx):
-        pass
-
-
     # Enter a parse tree produced by TestGrammarParser#DivExpr.
     def enterDivExpr(self, ctx):
         pass
 
     # Exit a parse tree produced by TestGrammarParser#DivExpr.
     def exitDivExpr(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#SubExpr.
+    def enterSubExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#SubExpr.
+    def exitSubExpr(self, ctx):
         pass
 
 
@@ -37,15 +37,6 @@ class TestGrammarListener(ParseTreeListener):
 
     # Exit a parse tree produced by TestGrammarParser#MulExpr.
     def exitMulExpr(self, ctx):
-        pass
-
-
-    # Enter a parse tree produced by TestGrammarParser#GtGteExpr.
-    def enterGtGteExpr(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#GtGteExpr.
-    def exitGtGteExpr(self, ctx):
         pass
 
 
@@ -103,6 +94,15 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by TestGrammarParser#LtExpr.
+    def enterLtExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#LtExpr.
+    def exitLtExpr(self, ctx):
+        pass
+
+
     # Enter a parse tree produced by TestGrammarParser#IntExprWrapper.
     def enterIntExprWrapper(self, ctx):
         pass
@@ -148,15 +148,6 @@ class TestGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by TestGrammarParser#LtLteExpr.
-    def enterLtLteExpr(self, ctx):
-        pass
-
-    # Exit a parse tree produced by TestGrammarParser#LtLteExpr.
-    def exitLtLteExpr(self, ctx):
-        pass
-
-
     # Enter a parse tree produced by TestGrammarParser#intExpr.
     def enterIntExpr(self, ctx):
         pass
@@ -172,6 +163,15 @@ class TestGrammarListener(ParseTreeListener):
 
     # Exit a parse tree produced by TestGrammarParser#ifFalseBlock.
     def exitIfFalseBlock(self, ctx):
+        pass
+
+
+    # Enter a parse tree produced by TestGrammarParser#GtExpr.
+    def enterGtExpr(self, ctx):
+        pass
+
+    # Exit a parse tree produced by TestGrammarParser#GtExpr.
+    def exitGtExpr(self, ctx):
         pass
 
 

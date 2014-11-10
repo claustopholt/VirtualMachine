@@ -9,6 +9,9 @@ class Opcode(Enum):
     div = 9914            # Pop two integers off stack and divide, push result onto stack
     branch = 9930         # jump to memory address offset, a simple branch ("branch 0a00" will branch 10 bytes forward)
     branchne = 9931       # Branch if not equal
+    brancheq = 9932       # Branch if equal
+    branchgt = 9933       # Branch if greater than
+    branchlt = 9934       # Branch if less than
     stfld = 9940          # Pop one integer off stack and store in field with data memory offset x
     ldfld = 9941          # Load integer value from data memory offset x and push onto stack
     output = 9950         # pop one value from stack and send to stdout
