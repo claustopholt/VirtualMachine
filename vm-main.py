@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     # Load sourcecode and compile to bytecodes.
     sourcecode = FileStream("example-source.txt")
-    bytecodes = TestLanguage.compile(sourcecode)
+    bytecodes = TestLanguage.compile_code(sourcecode)
 
     # A simple test program that counts to 20.
     code = [Opcode.int.value, 10,     # Push integer 10 onto the stack.

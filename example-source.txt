@@ -2,8 +2,10 @@
 
 script
 {
-    a = 10
-    b = 2
+    a = 2;
+    b = 10 - (8 / 2);
+
+    output(a + b);
 
     #while a < 20
     #{

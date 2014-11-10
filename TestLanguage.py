@@ -3,9 +3,10 @@ from Grammar.TestGrammarLexer import TestGrammarLexer
 from Grammar.TestGrammarParser import TestGrammarParser
 from Grammar.MyListener import MyListener
 
-def compile(sourcecode):
 
-    print("Compiling.")
+def compile_code(sourcecode):
+
+    print("Compiling...")
 
     # Create lexer and parser.
     lexer = TestGrammarLexer(sourcecode)
@@ -14,8 +15,10 @@ def compile(sourcecode):
 
     # Walk the tree.
     tree = parser.script()
-    myListener = MyListener()
+    my_listener = MyListener()
     walker = ParseTreeWalker()
-    walker.walk(myListener, tree)
+    walker.walk(my_listener, tree)
+
+    print("Compilation done.")
 
 
