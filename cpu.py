@@ -26,6 +26,15 @@ class Cpu():
         self.sp = stack_start_address        # Stack pointer.
         self.pc = program_start_address      # Program counter.
 
+    def stack_pop(self):
+        self.sp -= 2
+        pop_value = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
+        return pop_value
+
+    def stack_push(self, push_value):
+        self.mem[self.sp:self.sp + 2] = struct.pack("h", push_value)
+        self.sp += 2
+
     def execute_program(self):
 
         try:
@@ -40,17 +49,24 @@ class Cpu():
                     self.pc += 2
                     self.sp += 2
                 elif opcode == Opcode.add:
-                    self.sp -= 2
-                    pop1 = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
-                    self.sp -= 2
-                    pop2 = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
-                    res = pop1 + pop2
-                    self.mem[self.sp:self.sp + 2] = struct.pack("h", res)
-                    self.sp += 2
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    self.stack_push(pop1_value + pop2_value)
+                elif opcode == Opcode.sub:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    self.stack_push(pop2_value - pop1_value)
+                elif opcode == Opcode.mul:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    self.stack_push(pop1_value * pop2_value)
+                elif opcode == Opcode.div:
+                    pop1_value = self.stack_pop()
+                    pop2_value = self.stack_pop()
+                    self.stack_push(int(pop2_value / pop1_value))
                 elif opcode == Opcode.output:
-                    self.sp -= 2
-                    pop1 = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
-                    sys.stdout.write("{0}\r\n".format(pop1))
+                    pop1_value = self.stack_pop()
+                    sys.stdout.write("{0}\r\n".format(pop1_value))
                 elif opcode == Opcode.branch:
                     offset = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
                     self.pc += 2
@@ -58,7 +74,7 @@ class Cpu():
                     self.pc += offset
                     if self.pc >= self.mem_size:
                         self.pc -= self.mem_size
-                elif opcode == Opcode.bne:
+                elif opcode == Opcode.branchne:
                     self.sp -= 2
                     pop = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
                     peek = struct.unpack("h", str(self.mem[self.sp - 2:self.sp]))[0]

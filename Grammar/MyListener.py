@@ -35,7 +35,7 @@ class MyListener(TestGrammarListener):
 
         #print(self.context_properties)
         #print(self.labels)
-        print(self.bytecodes)
+        #print(self.bytecodes)
 
     #endregion
 
@@ -236,7 +236,7 @@ class MyListener(TestGrammarListener):
 
     #endregion
 
-    #region Function calls
+    #region System calls
 
     def exitOutputCall(self, ctx):
         self.bytecodes.append(Opcode.output.value)

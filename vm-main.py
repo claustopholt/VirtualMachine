@@ -22,10 +22,10 @@ if __name__ == "__main__":
     #cpu.print_registers()
 
     # Execute program.
-    #cpu.execute_program()
+    cpu.execute_program()
 
     # Display resulting memory.
-    #cpu.print_mem()
-    #cpu.print_registers()
+    cpu.print_mem()
+    cpu.print_registers()
 
 
