@@ -152,6 +152,8 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
 
+        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(1)
         self.bytecodes.append(Opcode.brancheq.value)    # True
         self.bytecodes.append(true_label)
 
@@ -209,6 +211,8 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
 
+        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(1)
         self.bytecodes.append(Opcode.brancheq.value)    # True
         self.bytecodes.append(true_label)
 

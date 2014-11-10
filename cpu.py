@@ -129,6 +129,7 @@ class Cpu():
 
         except Exception as ex:
             sys.stdout.write("Program crash!! Message: {0}\r\n".format(ex.message))
+            #raise
         finally:
             sys.stdout.write("Program finished.\r\n")
 

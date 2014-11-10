@@ -14,7 +14,7 @@ if __name__ == "__main__":
               512,  # Mem size
               128,  # Code start address
               0,    # Stack start address
-              256)  # Data start address
+              384)  # Data start address
 
     # Display start memory.
     cpu.print_disassembly()
