@@ -1,6 +1,7 @@
 import sys
+import io
 import struct
-from opcode import Opcode
+from vmopcode import VMOpcode
 
 
 class Cpu():
@@ -25,6 +26,9 @@ class Cpu():
         # Create stack pointer and program counter.
         self.sp = stack_start_address        # Stack pointer.
         self.pc = program_start_address      # Program counter.
+
+        # Create an output stream.
+        self.out_stream = io.StringIO()
 
     def stack_pop(self):
         self.sp -= 2
@@ -56,82 +60,79 @@ class Cpu():
     def execute_program(self):
 
         try:
-            sys.stdout.write("\r\n- EXECUTE ----------------\r\n")
             while True:
                 opcode_word = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
-                opcode = Opcode._value2member_map_[opcode_word]
+                opcode = VMOpcode._value2member_map_[opcode_word]
                 self.pc += 2
 
-                if opcode == Opcode.int:
+                if opcode == VMOpcode.int:
                     code_value = self.code_next()
                     self.stack_push(code_value)
-                elif opcode == Opcode.add:
+                elif opcode == VMOpcode.add:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     self.stack_push(pop1_value + pop2_value)
-                elif opcode == Opcode.sub:
+                elif opcode == VMOpcode.sub:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     self.stack_push(pop2_value - pop1_value)
-                elif opcode == Opcode.mul:
+                elif opcode == VMOpcode.mul:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     self.stack_push(pop1_value * pop2_value)
-                elif opcode == Opcode.div:
+                elif opcode == VMOpcode.div:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     self.stack_push(int(pop2_value / pop1_value))
-                elif opcode == Opcode.output:
+                elif opcode == VMOpcode.output:
                     pop1_value = self.stack_pop()
-                    sys.stdout.write("{0}\r\n".format(pop1_value))
-                elif opcode == Opcode.branch:
+                    #sys.stdout.write("{0}\r\n".format(pop1_value))
+                    self.out_stream.write(u"{0}\r\n".format(pop1_value))
+                elif opcode == VMOpcode.branch:
                     offset = self.code_next()
                     self.pc = self.program_start_address + (offset * 2)
-                elif opcode == Opcode.branchne:
+                elif opcode == VMOpcode.branchne:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     offset = self.code_next()
                     if pop1_value != pop2_value:
                         self.pc = self.program_start_address + (offset * 2)
-                elif opcode == Opcode.brancheq:
+                elif opcode == VMOpcode.brancheq:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     offset = self.code_next()
                     if pop1_value == pop2_value:
                         self.pc = self.program_start_address + (offset * 2)
-                elif opcode == Opcode.branchgt:
+                elif opcode == VMOpcode.branchgt:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     offset = self.code_next()
                     if pop2_value > pop1_value:
                         self.pc = self.program_start_address + (offset * 2)
-                elif opcode == Opcode.branchlt:
+                elif opcode == VMOpcode.branchlt:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
                     offset = self.code_next()
                     if pop2_value < pop1_value:
                         self.pc = self.program_start_address + (offset * 2)
-                elif opcode == Opcode.stfld:
+                elif opcode == VMOpcode.stfld:
                     offset = self.code_next()
                     pop_value = self.stack_pop()
                     self.data_set(offset, pop_value)
-                elif opcode == Opcode.ldfld:
+                elif opcode == VMOpcode.ldfld:
                     offset = self.code_next()
                     value = self.data_get(offset)
                     self.stack_push(value)
 
-                elif opcode == Opcode.halt:
+                elif opcode == VMOpcode.halt:
+                    #self.out_stream.close()
                     break
 
                 if self.pc >= self.mem_size:
-                    sys.stdout.write("Program counter exceeded memory size, terminating.\r\n")
-                    break
+                    raise "Program counter exceeded memory size, terminating.\r\n"
 
         except Exception as ex:
-            sys.stdout.write("Program crash!! Message: {0}\r\n".format(ex.message))
-            #raise
-        finally:
-            sys.stdout.write("Program finished.\r\n")
+            raise "Program crash!! Message: {0}\r\n".format(ex.message)
 
     def print_mem(self):
         # Output memory as words (little-endian).
@@ -160,69 +161,69 @@ class Cpu():
 
             # Get opcode and increment address to next word.
             opcode_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-            opcode = Opcode._value2member_map_[opcode_word]
+            opcode = VMOpcode._value2member_map_[opcode_word]
             output += "{0:02x}{1:02x} ".format(self.mem[address], self.mem[address + 1])
             address += 2
 
-            if opcode == Opcode.int:
+            if opcode == VMOpcode.int:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       ICONST   {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       INT        {2}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      arg_word)
                 address += 2
-            elif opcode == Opcode.add:
+            elif opcode == VMOpcode.add:
                 output += "           ADD"
-            elif opcode == Opcode.sub:
+            elif opcode == VMOpcode.sub:
                 output += "           SUB"
-            elif opcode == Opcode.mul:
+            elif opcode == VMOpcode.mul:
                 output += "           MUL"
-            elif opcode == Opcode.div:
+            elif opcode == VMOpcode.div:
                 output += "           DIV"
-            elif opcode == Opcode.output:
+            elif opcode == VMOpcode.output:
                 output += "           OUTPUT"
-            elif opcode == Opcode.ldfld:
+            elif opcode == VMOpcode.ldfld:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       LDFLD    {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       LDFLD      {2}".format(self.mem[address],
                                                                   self.mem[address + 1],
                                                                   arg_word)
                 address += 2
-            elif opcode == Opcode.stfld:
+            elif opcode == VMOpcode.stfld:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       STFLD    {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       STFLD      {2}".format(self.mem[address],
                                                                   self.mem[address + 1],
                                                                   arg_word)
                 address += 2
-            elif opcode == Opcode.branch:
+            elif opcode == VMOpcode.branch:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCH   00{2:02x}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCH     {2:04x}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      self.program_start_address + arg_word * 2)
                 address += 2
-            elif opcode == Opcode.branchne:
+            elif opcode == VMOpcode.branchne:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHNE 00{2:02x}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHNE   {2:04x}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      self.program_start_address + arg_word * 2)
                 address += 2
-            elif opcode == Opcode.brancheq:
+            elif opcode == VMOpcode.brancheq:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHEQ 00{2:02x}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHEQ   {2:04x}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      self.program_start_address + arg_word * 2)
                 address += 2
-            elif opcode == Opcode.branchgt:
+            elif opcode == VMOpcode.branchgt:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHGT 00{2:02x}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHGT   {2:04x}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      self.program_start_address + arg_word * 2)
                 address += 2
-            elif opcode == Opcode.branchlt:
+            elif opcode == VMOpcode.branchlt:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHLT 00{2:02x}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHLT   {2:04x}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      self.program_start_address + arg_word * 2)
                 address += 2
-            elif opcode == Opcode.halt:
+            elif opcode == VMOpcode.halt:
                 output += "           HALT"
 
             # Output text.

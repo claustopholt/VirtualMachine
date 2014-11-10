@@ -1,3 +1,3 @@
-from opcode import Opcode
+from vmopcode import VMOpcode
 
 __author__ = 'Claus Topholt'

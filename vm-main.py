@@ -1,5 +1,4 @@
 from antlr4 import FileStream
-from opcode import Opcode
 from cpu import Cpu
 import TestLanguage
 
@@ -18,11 +17,13 @@ if __name__ == "__main__":
 
     # Display start memory.
     cpu.print_disassembly()
-    #cpu.print_mem()
-    #cpu.print_registers()
 
     # Execute program.
     cpu.execute_program()
+
+    value = cpu.out_stream.getvalue()
+    print("\r\n- EXECUTION -------------\r\n{0}".format(value))
+    cpu.out_stream.close()
 
     # Display resulting memory.
     cpu.print_mem()

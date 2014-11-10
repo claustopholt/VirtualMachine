@@ -1,7 +1,7 @@
 VirtualMachine
 ==============
-STEP 2: This is a simple virtual machine, simulating a hypothetical microprocessor. It also contains a simple test
-language that compiles to the virtual machine's bytecode.
+STEP 3: This is a simple virtual machine, simulating a hypothetical microprocessor. It also contains a simple test
+language that compiles to the virtual machine's bytecode. The virtual machine is hosted on an interactive website.
 
 Built for Python 2.7.
 

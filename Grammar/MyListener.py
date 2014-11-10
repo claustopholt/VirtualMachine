@@ -1,6 +1,6 @@
 from Grammar.TestGrammarListener import TestGrammarListener
 from pprint import pprint
-from opcode import Opcode
+from vmopcode import VMOpcode
 
 class MyListener(TestGrammarListener):
 
@@ -31,7 +31,7 @@ class MyListener(TestGrammarListener):
         pass
 
     def exitScript(self, ctx):
-        self.bytecodes.append(Opcode.halt.value)
+        self.bytecodes.append(VMOpcode.halt.value)
 
         #print(self.context_properties)
         #print(self.labels)
@@ -47,7 +47,7 @@ class MyListener(TestGrammarListener):
             self.variable_names.append(name)
         offset = self.variable_names.index(name)
 
-        self.bytecodes.append(Opcode.stfld.value)
+        self.bytecodes.append(VMOpcode.stfld.value)
         self.bytecodes.append(offset)
 
     def exitIdExpr(self, ctx):
@@ -56,86 +56,86 @@ class MyListener(TestGrammarListener):
             self.variable_names.append(name)
         offset = self.variable_names.index(name)
 
-        self.bytecodes.append(Opcode.ldfld.value)
+        self.bytecodes.append(VMOpcode.ldfld.value)
         self.bytecodes.append(offset)
 
     def exitIntExpr(self, ctx):
         val = int(ctx.INT().getText())
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(val)
 
     def exitAddExpr(self, ctx):
-        self.bytecodes.append(Opcode.add.value)
+        self.bytecodes.append(VMOpcode.add.value)
 
     def exitSubExpr(self, ctx):
-        self.bytecodes.append(Opcode.sub.value)
+        self.bytecodes.append(VMOpcode.sub.value)
 
     def exitMulExpr(self, ctx):
-        self.bytecodes.append(Opcode.mul.value)
+        self.bytecodes.append(VMOpcode.mul.value)
 
     def exitDivExpr(self, ctx):
-        self.bytecodes.append(Opcode.div.value)
+        self.bytecodes.append(VMOpcode.div.value)
 
     def exitEqualExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
-        self.bytecodes.append(Opcode.brancheq.value)
+        self.bytecodes.append(VMOpcode.brancheq.value)
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.int.value)     # False
+        self.bytecodes.append(VMOpcode.int.value)     # False
         self.bytecodes.append(0)
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
         self.helper_mark_label(true_label)          # True
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
 
         self.helper_mark_label(done_label)          # Done
 
     def exitNotEqualExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
-        self.bytecodes.append(Opcode.branchne.value)
+        self.bytecodes.append(VMOpcode.branchne.value)
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.int.value)     # False
+        self.bytecodes.append(VMOpcode.int.value)     # False
         self.bytecodes.append(0)
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
         self.helper_mark_label(true_label)          # True
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
 
         self.helper_mark_label(done_label)          # Done
 
     def exitGtExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
-        self.bytecodes.append(Opcode.branchgt.value)
+        self.bytecodes.append(VMOpcode.branchgt.value)
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.int.value)     # False
+        self.bytecodes.append(VMOpcode.int.value)     # False
         self.bytecodes.append(0)
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
         self.helper_mark_label(true_label)          # True
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
 
         self.helper_mark_label(done_label)          # Done
 
     def exitLtExpr(self, ctx):
         true_label, done_label = [self.helper_create_label() for _ in xrange(2)]
-        self.bytecodes.append(Opcode.branchlt.value)
+        self.bytecodes.append(VMOpcode.branchlt.value)
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.int.value)     # False
+        self.bytecodes.append(VMOpcode.int.value)     # False
         self.bytecodes.append(0)
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
         self.helper_mark_label(true_label)          # True
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
 
         self.helper_mark_label(done_label)          # Done
@@ -152,12 +152,12 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
 
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
-        self.bytecodes.append(Opcode.brancheq.value)    # True
+        self.bytecodes.append(VMOpcode.brancheq.value)    # True
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.branch.value)      # False
+        self.bytecodes.append(VMOpcode.branch.value)      # False
         self.bytecodes.append(false_label)
 
     def enterIfTrueBlock(self, ctx):
@@ -170,7 +170,7 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
 
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
     def enterIfFalseBlock(self, ctx):
@@ -183,7 +183,7 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
 
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(done_label)
 
     def exitIfStatement(self, ctx):
@@ -211,12 +211,12 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
 
-        self.bytecodes.append(Opcode.int.value)
+        self.bytecodes.append(VMOpcode.int.value)
         self.bytecodes.append(1)
-        self.bytecodes.append(Opcode.brancheq.value)    # True
+        self.bytecodes.append(VMOpcode.brancheq.value)    # True
         self.bytecodes.append(true_label)
 
-        self.bytecodes.append(Opcode.branch.value)      # False (meaning: Done)
+        self.bytecodes.append(VMOpcode.branch.value)      # False (meaning: Done)
         self.bytecodes.append(done_label)
 
     def enterWhileBlock(self, ctx):
@@ -229,7 +229,7 @@ class MyListener(TestGrammarListener):
         # Get true, false and done labels from context properties.
         begin_label, true_label, done_label = self.context_properties[ctx.parentCtx]
 
-        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(VMOpcode.branch.value)
         self.bytecodes.append(begin_label)
 
     def exitWhileStatement(self, ctx):
@@ -243,7 +243,7 @@ class MyListener(TestGrammarListener):
     #region System calls
 
     def exitOutputCall(self, ctx):
-        self.bytecodes.append(Opcode.output.value)
+        self.bytecodes.append(VMOpcode.output.value)
         pass
 
     #endregion

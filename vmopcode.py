@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Opcode(Enum):
+class VMOpcode(Enum):
     int = 9910            # push an integer on the stack ("iconst 100")
     add = 9911            # pop two integers off stack and add, push result onto stack
     sub = 9912            # Pop two integers off stack and subtract, push result onto stack
