@@ -107,7 +107,6 @@ class Cpu():
 
             # Get opcode and increment address to next word.
             opcode_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-            #print("Opcode_word: " + str(opcode_word))
             opcode = Opcode._value2member_map_[opcode_word]
             output += "{0:02x}{1:02x} ".format(self.mem[address], self.mem[address + 1])
             address += 2
@@ -130,13 +129,13 @@ class Cpu():
                 output += "           OUTPUT"
             elif opcode == Opcode.ldfld:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       LDFLD {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       LDFLD    {2}".format(self.mem[address],
                                                                   self.mem[address + 1],
                                                                   arg_word)
                 address += 2
             elif opcode == Opcode.stfld:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       STFLD {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       STFLD    {2}".format(self.mem[address],
                                                                   self.mem[address + 1],
                                                                   arg_word)
                 address += 2
@@ -146,7 +145,7 @@ class Cpu():
                                                                      self.mem[address + 1],
                                                                      arg_word)
                 address += 2
-            elif opcode == Opcode.bne:
+            elif opcode == Opcode.branchne:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
                 output += "{0:02x}{1:02x}       BRANCHNE {2}".format(self.mem[address],
                                                                      self.mem[address + 1],
@@ -156,7 +155,7 @@ class Cpu():
                 output += "           HALT"
 
             # Output text.
-            sys.stdout.write(output + "\r\n")
+            sys.stdout.write("{0}\r\n".format(output))
 
     def print_registers(self):
         sys.stdout.write("\r\n- REGISTERS ----------------\r\n")

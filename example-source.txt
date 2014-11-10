@@ -2,9 +2,11 @@
 
 script
 {
+    # Add some values to two variables.
     a = 2;
     b = 10 - (8 / 2);
 
+    # Output the result of a simple calculation.
     output(a + b);
 
     #while a < 20

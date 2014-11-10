@@ -4,7 +4,6 @@ from opcode import Opcode
 
 class MyListener(TestGrammarListener):
 
-    # TODO: Variable names must be translated into mem offsets. Keep counter.
     variable_names = []
     bytecodes = []
 
@@ -12,7 +11,8 @@ class MyListener(TestGrammarListener):
         pass
 
     def exitScript(self, ctx):
-        print(self.bytecodes)
+        self.bytecodes.append(Opcode.halt.value)
+        #print(self.bytecodes)
 
     def exitVarAssign(self, ctx):
         name = ctx.ID().getText()
