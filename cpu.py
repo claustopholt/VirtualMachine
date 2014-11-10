@@ -107,6 +107,7 @@ class Cpu():
 
             # Get opcode and increment address to next word.
             opcode_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
+            #print("Opcode_word: " + str(opcode_word))
             opcode = Opcode._value2member_map_[opcode_word]
             output += "{0:02x}{1:02x} ".format(self.mem[address], self.mem[address + 1])
             address += 2
@@ -119,24 +120,33 @@ class Cpu():
                 address += 2
             elif opcode == Opcode.add:
                 output += "           ADD"
+            elif opcode == Opcode.sub:
+                output += "           SUB"
+            elif opcode == Opcode.mul:
+                output += "           MUL"
+            elif opcode == Opcode.div:
+                output += "           DIV"
             elif opcode == Opcode.output:
                 output += "           OUTPUT"
-            elif opcode == Opcode.call:
-                arg_word1 = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                arg_word2 = struct.unpack("h", str(self.mem[address + 2:address + 4]))[0]
-                output += "{0:02x}{1:02x} {2:02x}{3:02x}  CALL     {4} {5}".format(self.mem[address],
-                                                                                   self.mem[address + 1],
-                                                                                   self.mem[address + 2],
-                                                                                   self.mem[address + 3],
-                                                                                   arg_word1, arg_word2)
-                address += 4
-            if opcode == Opcode.branch:
+            elif opcode == Opcode.ldfld:
+                arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
+                output += "{0:02x}{1:02x}       LDFLD {2}".format(self.mem[address],
+                                                                  self.mem[address + 1],
+                                                                  arg_word)
+                address += 2
+            elif opcode == Opcode.stfld:
+                arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
+                output += "{0:02x}{1:02x}       STFLD {2}".format(self.mem[address],
+                                                                  self.mem[address + 1],
+                                                                  arg_word)
+                address += 2
+            elif opcode == Opcode.branch:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
                 output += "{0:02x}{1:02x}       BRANCH   {2}".format(self.mem[address],
                                                                      self.mem[address + 1],
                                                                      arg_word)
                 address += 2
-            if opcode == Opcode.bne:
+            elif opcode == Opcode.bne:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
                 output += "{0:02x}{1:02x}       BRANCHNE {2}".format(self.mem[address],
                                                                      self.mem[address + 1],

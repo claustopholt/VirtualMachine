@@ -6,8 +6,6 @@ from Grammar.MyListener import MyListener
 
 def compile_code(sourcecode):
 
-    print("Compiling...")
-
     # Create lexer and parser.
     lexer = TestGrammarLexer(sourcecode)
     stream = CommonTokenStream(lexer)
@@ -19,6 +17,7 @@ def compile_code(sourcecode):
     walker = ParseTreeWalker()
     walker.walk(my_listener, tree)
 
-    print("Compilation done.")
+    return my_listener.bytecodes
+
 
 

@@ -1,9 +1,11 @@
 from Grammar.TestGrammarListener import TestGrammarListener
 from pprint import pprint
-
+from opcode import Opcode
 
 class MyListener(TestGrammarListener):
 
+    # TODO: Variable names must be translated into mem offsets. Keep counter.
+    variable_names = []
     bytecodes = []
 
     def enterScript(self, ctx):
@@ -14,29 +16,38 @@ class MyListener(TestGrammarListener):
 
     def exitVarAssign(self, ctx):
         name = ctx.ID().getText()
-        self.bytecodes.append(name)
-        self.bytecodes.append('STFLD')
+        if not name in self.variable_names:
+            self.variable_names.append(name)
+        offset = self.variable_names.index(name)
+
+        self.bytecodes.append(Opcode.stfld.value)
+        self.bytecodes.append(offset)
 
     def exitIdExpr(self, ctx):
         name = ctx.ID().getText()
-        self.bytecodes.append(name)
-        self.bytecodes.append("LDFLD")
+        if not name in self.variable_names:
+            self.variable_names.append(name)
+        offset = self.variable_names.index(name)
+
+        self.bytecodes.append(Opcode.ldfld.value)
+        self.bytecodes.append(offset)
 
     def exitIntExpr(self, ctx):
         val = int(ctx.INT().getText())
+        self.bytecodes.append(Opcode.int.value)
         self.bytecodes.append(val)
 
     def exitAddExpr(self, ctx):
-        self.bytecodes.append("ADD")
+        self.bytecodes.append(Opcode.add.value)
 
     def exitSubExpr(self, ctx):
-        self.bytecodes.append("SUB")
+        self.bytecodes.append(Opcode.sub.value)
 
     def exitMulExpr(self, ctx):
-        self.bytecodes.append("MUL")
+        self.bytecodes.append(Opcode.mul.value)
 
     def exitDivExpr(self, ctx):
-        self.bytecodes.append("DIV")
+        self.bytecodes.append(Opcode.div.value)
 
     def exitEqualExpr(self, ctx):
         # TODO!
@@ -55,5 +66,5 @@ class MyListener(TestGrammarListener):
         pass
 
     def exitOutputCall(self, ctx):
-        self.bytecodes.append("OUTPUT")
+        self.bytecodes.append(Opcode.output.value)
 
