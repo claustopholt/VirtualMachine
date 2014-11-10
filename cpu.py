@@ -31,9 +31,27 @@ class Cpu():
         pop_value = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
         return pop_value
 
+    def stack_peek(self):
+        peek_value = struct.unpack("h", str(self.mem[self.sp - 2:self.sp]))[0]
+        return peek_value
+
     def stack_push(self, push_value):
         self.mem[self.sp:self.sp + 2] = struct.pack("h", push_value)
         self.sp += 2
+
+    def code_next(self):
+        code_value = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
+        self.pc += 2
+        return code_value
+
+    def data_store(self, offset, value):
+        addr = self.data_start_address + (offset * 2)
+        self.mem[addr:addr + 2] = struct.pack("h", value)
+
+    def data_get(self, offset):
+        addr = self.data_start_address + (offset * 2)
+        value = struct.unpack("h", str(self.mem[addr:addr + 2]))[0]
+        return value
 
     def execute_program(self):
 
@@ -45,9 +63,8 @@ class Cpu():
                 self.pc += 2
 
                 if opcode == Opcode.int:
-                    self.mem[self.sp:self.sp + 2] = self.mem[self.pc:self.pc + 2]
-                    self.pc += 2
-                    self.sp += 2
+                    code_value = self.code_next()
+                    self.stack_push(code_value)
                 elif opcode == Opcode.add:
                     pop1_value = self.stack_pop()
                     pop2_value = self.stack_pop()
@@ -68,22 +85,27 @@ class Cpu():
                     pop1_value = self.stack_pop()
                     sys.stdout.write("{0}\r\n".format(pop1_value))
                 elif opcode == Opcode.branch:
-                    offset = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
-                    self.pc += 2
-                    print(offset)
+                    offset = self.code_next()
                     self.pc += offset
                     if self.pc >= self.mem_size:
                         self.pc -= self.mem_size
                 elif opcode == Opcode.branchne:
-                    self.sp -= 2
-                    pop = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
-                    peek = struct.unpack("h", str(self.mem[self.sp - 2:self.sp]))[0]
-                    offset = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
-                    self.pc += 2
+                    pop = self.stack_pop()
+                    peek = self.stack_peek()
+                    offset = self.code_next()
                     if pop != peek:
                         self.pc += offset
                         if self.pc >= self.mem_size:
                             self.pc -= self.mem_size
+                elif opcode == Opcode.stfld:
+                    offset = self.code_next()
+                    pop_value = self.stack_pop()
+                    self.data_store(offset, pop_value)
+                elif opcode == Opcode.ldfld:
+                    offset = self.code_next()
+                    value = self.data_get(offset)
+                    self.stack_push(value)
+
                 elif opcode == Opcode.halt:
                     break
 
@@ -94,7 +116,7 @@ class Cpu():
         except Exception as ex:
             sys.stdout.write("Program crash!! Message: {0}\r\n".format(ex.message))
         finally:
-            sys.stdout.write("Program execution finished.\r\n")
+            sys.stdout.write("Program finished.\r\n")
 
     def print_mem(self):
         # Output memory as words (little-endian).
