@@ -141,33 +141,33 @@ class Cpu():
                 address += 2
             elif opcode == Opcode.branch:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCH   {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCH   00{2:02x}".format(self.mem[address],
                                                                      self.mem[address + 1],
-                                                                     arg_word)
+                                                                     self.program_start_address + arg_word * 2)
                 address += 2
             elif opcode == Opcode.branchne:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHNE {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHNE 00{2:02x}".format(self.mem[address],
                                                                      self.mem[address + 1],
-                                                                     arg_word)
+                                                                     self.program_start_address + arg_word * 2)
                 address += 2
             elif opcode == Opcode.brancheq:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHEQ {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHEQ 00{2:02x}".format(self.mem[address],
                                                                      self.mem[address + 1],
-                                                                     arg_word)
+                                                                     self.program_start_address + arg_word * 2)
                 address += 2
             elif opcode == Opcode.branchgt:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHGT {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHGT 00{2:02x}".format(self.mem[address],
                                                                      self.mem[address + 1],
-                                                                     arg_word)
+                                                                     self.program_start_address + arg_word * 2)
                 address += 2
             elif opcode == Opcode.branchlt:
                 arg_word = struct.unpack("h", str(self.mem[address:address + 2]))[0]
-                output += "{0:02x}{1:02x}       BRANCHLT {2}".format(self.mem[address],
+                output += "{0:02x}{1:02x}       BRANCHLT 00{2:02x}".format(self.mem[address],
                                                                      self.mem[address + 1],
-                                                                     arg_word)
+                                                                     self.program_start_address + arg_word * 2)
                 address += 2
             elif opcode == Opcode.halt:
                 output += "           HALT"

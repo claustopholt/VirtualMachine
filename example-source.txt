@@ -2,19 +2,18 @@
 
 script
 {
-    a = (5 == (2 < 1));
-    a = a + 1;
+    a = 10;
 
-    # Add some values to two variables.
-    #a = 2;
-    #b = 10 - (8 / 2);
+    if (a > (4 == 2 + 2))
+    {
+        output(111);
+    }
+    else
+    {
+        output(999);
+    }
 
-    #if (a == 2)
-    #{
-        #output(a + b);
-    #}
-
-    #output(123);
+    output(123);
 
     #while a < 20
     #{

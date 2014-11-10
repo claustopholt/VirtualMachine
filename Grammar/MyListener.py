@@ -32,6 +32,7 @@ class MyListener(TestGrammarListener):
 
     def exitScript(self, ctx):
         self.bytecodes.append(Opcode.halt.value)
+
         #print(self.context_properties)
         #print(self.labels)
         print(self.bytecodes)
@@ -146,10 +147,53 @@ class MyListener(TestGrammarListener):
     def enterIfStatement(self, ctx):
         # Create three labels (true, false, done) and store in contex properties.
         self.context_properties[ctx] = [self.helper_create_label() for _ in xrange(3)]
+        print(self.context_properties)
 
     def exitIfCondition(self, ctx):
         # Get true, false and done labels from context properties.
         true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.bytecodes.append(Opcode.brancheq.value)    # True
+        self.bytecodes.append(true_label)
+
+        self.bytecodes.append(Opcode.branch.value)      # False
+        self.bytecodes.append(false_label)
+
+    def enterIfTrueBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.helper_mark_label(true_label)
+
+    def exitIfTrueBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(done_label)
+
+    def enterIfFalseBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.helper_mark_label(false_label)
+
+    def exitIfFalseBlock(self, ctx):
+        # Get true, false and done labels from context properties.
+        true_label, false_label, done_label = self.context_properties[ctx.parentCtx]
+
+        self.bytecodes.append(Opcode.branch.value)
+        self.bytecodes.append(done_label)
+
+    def exitIfStatement(self, ctx):
+        # Get true, false and done labels from context properties.
+        true_label, false_label, done_label = self.context_properties[ctx]
+
+        if not ctx.ifFalseBlock():
+            self.helper_mark_label(false_label)
+
+        self.helper_mark_label(done_label)
+
 
     #endregion
 
