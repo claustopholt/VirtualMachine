@@ -2,7 +2,7 @@ VirtualMachine
 ==============
 STEP 3: This is a simple virtual machine, simulating a hypothetical microprocessor. It also contains a simple test
 language that compiles to the virtual machine's bytecode. The virtual machine is hosted on an interactive website,
-using Flask, Gevent and Redis.
+using Flask and Redis.
 
 Built for Python 2.7.
 
