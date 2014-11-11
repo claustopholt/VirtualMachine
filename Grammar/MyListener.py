@@ -4,10 +4,11 @@ from vmopcode import VMOpcode
 
 class MyListener(TestGrammarListener):
 
-    variable_names = []
-    labels = []
-    context_properties = {}
-    bytecodes = []
+    def __init__(self):
+        self.variable_names = []
+        self.labels = []
+        self.context_properties = {}
+        self.bytecodes = []
 
     #region Helpers
 
