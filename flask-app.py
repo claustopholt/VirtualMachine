@@ -5,20 +5,20 @@ from flask import render_template
 import worker_monitor
 
 
-def create_app():
-    # Create Flask app with a monitor thread.
-    app = Flask(__name__)
-    global monitor_thread
+if __name__ == "__main__":
 
-    # Allow the Flask app to close down thread.
-    def interrupt():
-        global monitor_thread
-        monitor_thread.cancel()
+    # Start worker monitor thread.
+    monitor_thread = threading.Thread(target=worker_monitor.start_monitor, args=())
+    monitor_thread.start()
+
+    # Create Flask app.
+    app = Flask(__name__)
 
     # Front page.
     @app.route("/")
-    def hello():
-        return "Hello World!"
+    def frontpage():
+        template = render_template("frontpage.html")
+        return template
 
     # Test route with template.
     @app.route("/blah/")
@@ -27,17 +27,6 @@ def create_app():
         template = render_template("blah_template.html", name=name)
         return template
 
-    # Register interrupt and return app.
-    atexit.register(interrupt)
-    return app
-
-
-if __name__ == "__main__":
-    # Start at worker monitor, which will spawn up workers and keep them alive.
-    monitor_thread = threading.Thread(target=worker_monitor.monitor, args=())
-    monitor_thread.start()
-
-    # Create the Flask app.
-    app = create_app()
-    app.run(debug=True)
+    # Run Flask app.
+    app.run(debug=True, use_reloader=False)
 

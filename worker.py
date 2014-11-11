@@ -2,7 +2,7 @@ import os
 import time
 
 
-def worker():
+def start_worker():
     # See if there is work to be done.
     try:
         counter = 0
@@ -12,7 +12,7 @@ def worker():
             if counter > 5:
                 raise "blah"
 
-            print("Worker {0}, counter {1}".format(pid, counter))
+            #print("Worker {0}, counter {1}".format(pid, counter))
 
             # Sleep for a while.
             time.sleep(1)
@@ -23,3 +23,4 @@ def worker():
 
     finally:
         exit(0)
+
