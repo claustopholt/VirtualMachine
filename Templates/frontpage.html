@@ -25,55 +25,78 @@ script
     }
 }
     </textarea>
-    <br/><br/>
+    <br/>
+    <br/>
+
     <button>Compile</button>
     <button>Compile and Run</button>
     <button>Stop</button>
     <br/>
-    <br/><br/>
+    <br/>
+    <br/>
+
     <strong>Disassembly</strong><br/>
     <div class="code">
         0000 ABCD 0101 INT 10<br/>
         0002 0203 0201 0200 STFLD 0
     </div>
-    <br/><br/>
+    <br/>
+    <br/>
+
     <strong>Live Memory</strong><br/>
     <div class="code">
         0000<br/>
         0002<br/>
         0004
     </div>
-    <br/><br/>
+    <br/>
+    <br/>
+
     <strong>Registers</strong><br/>
     <div class="code">
         sp: 0002<br/>
         pc: 0004
     </div>
-    <br/><br/>
+    <br/>
+    <br/>
+
     <strong>Console</strong><br/>
     <div class="code">
         1<br/>
         2<br/>
         Program finished.
     </div>
-    <br/><br/>
-    <i>Status: Connected.</i>
+    <br/>
+    <br/>
+
+    <i>Status: <span id="connectionStatus" />.</i>
 
 <script>
+
     function testJSON() {
         var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
         jsonSocket.onopen = function() {
 
             console.log("JSON socket connected!");
+            document.getElementById("connectionStatus").textContent = "Connected";
+
             //jsonSocket.send(JSON.stringify(["SET", "hello", "world"]));
-            //jsonSocket.send(JSON.stringify(["GET", "hello"]));
             jsonSocket.send(JSON.stringify(["SUBSCRIBE", "mychannel"]));
         };
         jsonSocket.onmessage = function(messageEvent) {
             console.log("JSON received:", messageEvent.data);
         };
+        jsonSocket.onerror = function(message) {
+            console.log("websocket to redis error:", message);
+            document.getElementById("connectionStatus").textContent = "Error";
+        }
+        jsonSocket.onclose = function(message) {
+            console.log(("websocket to redis closed: ", message));
+            document.getElementById("connectionStatus").textContent = "Not connected";
+        }
     }
     testJSON();
+
 </script>
 </body>
 </html>
