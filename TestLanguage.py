@@ -4,10 +4,10 @@ from Grammar.TestGrammarParser import TestGrammarParser
 from Grammar.MyListener import MyListener
 
 
-def compile_code(sourcecode):
+def compile_code(sourcecode_stream):
 
     # Create lexer and parser.
-    lexer = TestGrammarLexer(sourcecode)
+    lexer = TestGrammarLexer(sourcecode_stream)
     stream = CommonTokenStream(lexer)
     parser = TestGrammarParser(stream)
 

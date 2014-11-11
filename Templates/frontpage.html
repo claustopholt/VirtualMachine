@@ -14,7 +14,7 @@
     </p>
 
     <strong>Source code</strong><br>
-    <textarea rows="10" cols="80" style="width:700px">
+    <textarea rows="10" cols="80" style="width:700px" id="sourcecode">
 script
 {
     a = 1;
@@ -28,7 +28,7 @@ script
     <br/>
     <br/>
 
-    <button>Compile</button>
+    <button onclick="compile();">Compile</button>
     <button>Compile and Run</button>
     <button>Stop</button>
     <br/>
@@ -96,6 +96,18 @@ script
         }
     }
     testJSON();
+
+    function compile() {
+        var sourcecode = document.getElementById("sourcecode").value;
+
+        var formdata = new FormData();
+        formdata.append("sourcecode", sourcecode);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:5000/compile", true);
+        xhr.send(formdata);
+        return false;
+    }
 
 </script>
 </body>
