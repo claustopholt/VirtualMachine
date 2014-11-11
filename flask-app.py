@@ -47,22 +47,30 @@ def compile():
     if not userid_cookie:
         return "Request forbidden because no userid was found.", 403
 
+    # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
+
     # Compile sourcecode written in browser.
     sourcecode_formdata = str(request.form["sourcecode"])
     sourcecode_stream = InputStream.InputStream(sourcecode_formdata)
     bytecodes = TestLanguage.compile_code(sourcecode_stream)
 
-    # Store resulting bytecodes in Redis (key "bytecodes:userid:{userid}").
-    redis_client.set("bytecodes:userid:{0}".format(userid_cookie), bytecodes)
+    # Store resulting bytecodes in Redis ("bytecodes:{userid}").
+    redis_client.set("bytecodes:{0}".format(userid_cookie), bytecodes)
+
+    # Create CPU with bytecodes, mem size, code addr, stack addr and data addr. Store in Redis ("cpu_mem:{userid}").
+    cpu = Cpu(bytecodes, 512, 128, 0, 384)
+
+    # Publish the bytecodes on the "bytecodes:{userid}" channel.
+    redis_client.publish("bytecodes:{0}".format(userid_cookie), bytecodes)
 
     return "Ok"
+
 
 @app.route("/test")
 def test():
     # Test route with redis publish.
     redis_client.publish("mychannel", "Test {0}".format(time.time()))
     return "Ok"
-
 
 
 if __name__ == "__main__":

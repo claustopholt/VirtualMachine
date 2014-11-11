@@ -36,7 +36,7 @@ script
     <br/>
 
     <strong>Disassembly</strong><br/>
-    <div class="code">
+    <div class="code" id="disassembly">
         0000 ABCD 0101 INT 10<br/>
         0002 0203 0201 0200 STFLD 0
     </div>
@@ -76,20 +76,32 @@ script
     function testJSON() {
         var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
         jsonSocket.onopen = function() {
-
             console.log("JSON socket connected!");
             document.getElementById("connectionStatus").textContent = "Connected";
 
-            //jsonSocket.send(JSON.stringify(["SET", "hello", "world"]));
-            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "mychannel"]));
+            // Subscribe to the "bytecodes:{userid}" channel.
+            var userid = getCookie("userid");
+            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid]));
         };
+
         jsonSocket.onmessage = function(messageEvent) {
             console.log("JSON received:", messageEvent.data);
+
+            // If bytecodes, update disassembly.
+            var userid = getCookie("userid");
+            message = JSON.parse(messageEvent.data);
+            console.log(message);
+            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "bytecodes:" + userid)
+            {
+                console.log("W00t!");
+            }
         };
+
         jsonSocket.onerror = function(message) {
             console.log("websocket to redis error:", message);
             document.getElementById("connectionStatus").textContent = "Error";
         }
+
         jsonSocket.onclose = function(message) {
             console.log(("websocket to redis closed: ", message));
             document.getElementById("connectionStatus").textContent = "Not connected";
@@ -97,6 +109,12 @@ script
     }
     testJSON();
 
+    function getCookie(cookie) {
+        return document.cookie.split(';').reduce(function (prev, c) {
+            var arr = c.split('=');
+            return (arr[0].trim() === cookie) ? arr[1] : prev;
+        }, undefined);
+}
     function compile() {
         var sourcecode = document.getElementById("sourcecode").value;
 
