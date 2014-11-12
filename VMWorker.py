@@ -88,7 +88,7 @@ class VMWorker():
                                               "Worker {0} serialized cpu and relinquished it.\r\n".format(self.pid))
 
                     # A useless sleep just to potentially let another worker grab this job first.
-                    time.sleep(1)
+                    #time.sleep(1)
                     break
 
         except Exception:

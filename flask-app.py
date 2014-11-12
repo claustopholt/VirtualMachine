@@ -77,12 +77,10 @@ def compile_and_run_route():
     redis_client.lpush("commandqueue", "compile-and-run:{0}".format(userid))
     return "Ok"
 
-
-@app.route("/test")
-def test():
-    # Test route with redis publish.
-    redis_client.publish("mychannel", "Test {0}".format(time.time()))
-    return "Ok"
+@app.route("/examples")
+def examples_route():
+    # Render response from template.
+    return render_template("examples.html")
 
 
 if __name__ == "__main__":
@@ -95,4 +93,4 @@ if __name__ == "__main__":
     redis_client = redis.StrictRedis(host="128.199.43.95", port=6379, db=0)
 
     # Run Flask app.
-    app.run(debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", debug=True, use_reloader=False)

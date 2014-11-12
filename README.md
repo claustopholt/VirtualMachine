@@ -6,4 +6,4 @@ using Flask and Redis.
 
 Built for Python 2.7.
 
-Pre-requisites (pip): enum34, antlr4-python2-runtime, redis.
+Pre-requisites (pip): enum34, antlr4-python2-runtime, redis and Flask.
