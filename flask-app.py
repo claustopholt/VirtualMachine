@@ -77,10 +77,17 @@ def compile_and_run_route():
     redis_client.lpush("commandqueue", "compile-and-run:{0}".format(userid))
     return "Ok"
 
+
 @app.route("/examples")
 def examples_route():
     # Render response from template.
     return render_template("examples.html")
+
+
+@app.route("/disassembly")
+def disassembly_route():
+    # Render response from template.
+    return render_template("disassembly.html")
 
 
 if __name__ == "__main__":
