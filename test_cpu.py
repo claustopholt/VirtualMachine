@@ -16,7 +16,7 @@ class TestCpu(unittest.TestCase):
 
         # Execute program and check that the result is 20.
         cpu = Cpu(bytecodes, 512, 128, 0, 384)
-        cpu.execute_program()
+        cpu.execute_step()
         data = cpu.out_stream.getvalue()
         cpu.out_stream.close()
         self.assertTrue(str(data).startswith("20"))

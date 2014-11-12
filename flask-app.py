@@ -82,14 +82,31 @@ def compile_and_run_route():
     compile_sourcecode(sourcecode, userid)
 
     # TODO: Send a queue message to start executing cpu. In the mean time, just do it here.
+
+    # Deserialize and get ready to execute.
     serialized_cpu = redis_client.get("cpu:{0}".format(userid))
     cpu = Cpu([], 512, 128, 0, 384)
     cpu.deserialize_cpu(serialized_cpu)
-    cpu.execute_program()
 
-    # TODO: Output.
-    output = cpu.out_stream.getvalue()
-    redis_client.publish("console:{0}".format(userid), output)
+    # Execute.
+    try:
+        while True:
+            cpu.execute_step()
+
+            # TODO: Output mem properly.
+            output = cpu.get_mem()
+            redis_client.publish("mem:{0}".format(userid), output)
+
+            # TODO: Output console properly.
+            output = cpu.out_stream.getvalue()
+            redis_client.publish("console:{0}".format(userid), output)
+
+    except Exception as ex:
+        print("Program ended. Crash?")
+        pass
+
+    finally:
+        pass
 
     return "Ok"
 

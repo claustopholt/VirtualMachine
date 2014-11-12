@@ -15,14 +15,13 @@ if __name__ == "__main__":
     cpu.get_disassembly()
 
     # Execute program.
-    cpu.execute_program()
+    cpu.execute_step()
 
-    value = cpu.out_stream.getvalue()
-    print("\r\n- EXECUTION -------------\r\n{0}".format(value))
-    cpu.out_stream.close()
+    print(cpu.out_stream.getvalue())
+    #cpu.out_stream.close()
 
     # Display resulting memory.
-    cpu.print_mem()
+    print(cpu.get_mem())
     cpu.print_registers()
 
 

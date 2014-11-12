@@ -88,99 +88,97 @@ class Cpu():
         value = struct.unpack("h", str(self.mem[addr:addr + 2]))[0]
         return value
 
-    def execute_program(self):
+    def execute_step(self):
 
         try:
-            while True:
-                opcode_word = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
-                opcode = VMOpcode._value2member_map_[opcode_word]
-                self.pc += 2
+            opcode_word = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
+            opcode = VMOpcode._value2member_map_[opcode_word]
+            self.pc += 2
 
-                if opcode == VMOpcode.int:
-                    code_value = self.code_next()
-                    self.stack_push(code_value)
-                elif opcode == VMOpcode.add:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    self.stack_push(pop1_value + pop2_value)
-                elif opcode == VMOpcode.sub:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    self.stack_push(pop2_value - pop1_value)
-                elif opcode == VMOpcode.mul:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    self.stack_push(pop1_value * pop2_value)
-                elif opcode == VMOpcode.div:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    self.stack_push(int(pop2_value / pop1_value))
-                elif opcode == VMOpcode.output:
-                    pop1_value = self.stack_pop()
-                    #sys.stdout.write("{0}\r\n".format(pop1_value))
-                    self.out_stream.write(u"{0}\r\n".format(pop1_value))
-                elif opcode == VMOpcode.branch:
-                    offset = self.code_next()
+            if opcode == VMOpcode.int:
+                code_value = self.code_next()
+                self.stack_push(code_value)
+            elif opcode == VMOpcode.add:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                self.stack_push(pop1_value + pop2_value)
+            elif opcode == VMOpcode.sub:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                self.stack_push(pop2_value - pop1_value)
+            elif opcode == VMOpcode.mul:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                self.stack_push(pop1_value * pop2_value)
+            elif opcode == VMOpcode.div:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                self.stack_push(int(pop2_value / pop1_value))
+            elif opcode == VMOpcode.output:
+                pop1_value = self.stack_pop()
+                #sys.stdout.write("{0}\r\n".format(pop1_value))
+                self.out_stream.write(u"{0}\r\n".format(pop1_value))
+            elif opcode == VMOpcode.branch:
+                offset = self.code_next()
+                self.pc = self.program_start_address + (offset * 2)
+            elif opcode == VMOpcode.branchne:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                offset = self.code_next()
+                if pop1_value != pop2_value:
                     self.pc = self.program_start_address + (offset * 2)
-                elif opcode == VMOpcode.branchne:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    offset = self.code_next()
-                    if pop1_value != pop2_value:
-                        self.pc = self.program_start_address + (offset * 2)
-                elif opcode == VMOpcode.brancheq:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    offset = self.code_next()
-                    if pop1_value == pop2_value:
-                        self.pc = self.program_start_address + (offset * 2)
-                elif opcode == VMOpcode.branchgt:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    offset = self.code_next()
-                    if pop2_value > pop1_value:
-                        self.pc = self.program_start_address + (offset * 2)
-                elif opcode == VMOpcode.branchlt:
-                    pop1_value = self.stack_pop()
-                    pop2_value = self.stack_pop()
-                    offset = self.code_next()
-                    if pop2_value < pop1_value:
-                        self.pc = self.program_start_address + (offset * 2)
-                elif opcode == VMOpcode.stfld:
-                    offset = self.code_next()
-                    pop_value = self.stack_pop()
-                    self.data_set(offset, pop_value)
-                elif opcode == VMOpcode.ldfld:
-                    offset = self.code_next()
-                    value = self.data_get(offset)
-                    self.stack_push(value)
+            elif opcode == VMOpcode.brancheq:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                offset = self.code_next()
+                if pop1_value == pop2_value:
+                    self.pc = self.program_start_address + (offset * 2)
+            elif opcode == VMOpcode.branchgt:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                offset = self.code_next()
+                if pop2_value > pop1_value:
+                    self.pc = self.program_start_address + (offset * 2)
+            elif opcode == VMOpcode.branchlt:
+                pop1_value = self.stack_pop()
+                pop2_value = self.stack_pop()
+                offset = self.code_next()
+                if pop2_value < pop1_value:
+                    self.pc = self.program_start_address + (offset * 2)
+            elif opcode == VMOpcode.stfld:
+                offset = self.code_next()
+                pop_value = self.stack_pop()
+                self.data_set(offset, pop_value)
+            elif opcode == VMOpcode.ldfld:
+                offset = self.code_next()
+                value = self.data_get(offset)
+                self.stack_push(value)
 
-                elif opcode == VMOpcode.halt:
-                    #self.out_stream.close()
-                    break
+            elif opcode == VMOpcode.halt:
+                raise StopIteration("Halt!")
 
-                if self.pc >= self.mem_size:
-                    raise "Program counter exceeded memory size, terminating.\r\n"
+            if self.pc >= self.mem_size:
+                raise "Program counter exceeded memory size, terminating.\r\n"
 
-        except Exception as ex:
+        except not Exception as ex:
             raise "Program crash!! Message: {0}\r\n".format(ex.message)
 
-    def print_mem(self):
+    def get_mem(self):
         # Output memory as words (little-endian).
-        sys.stdout.write("\r\n- MEMORY ----------------\r\n")
-
+        output = ""
         for i in range(0, self.mem_size, 2):
             if i % 32 == 0:
                 if i > 0:
-                    sys.stdout.write("\r\n")
-                sys.stdout.write("\033[0m{0:04x}:   \033[0m".format(i))
+                    output += "\r\n"
+                output += "{0:04x}:   ".format(i)
 
-            color = "\033[0m"
+            color = ""
             if self.mem[i] + self.mem[i+1] == 0:
-                color = "\033[37m"
-            sys.stdout.write("{0}{1:02x}{2:02x}\033[0m ".format(color, self.mem[i], self.mem[i + 1])),
+                color = ""
+            output += "{0}{1:02x}{2:02x} ".format(color, self.mem[i], self.mem[i + 1])
 
-        sys.stdout.write("\r\n")
+        output += "\r\n"
+        return output
 
     def get_disassembly(self):
         full_output = ""

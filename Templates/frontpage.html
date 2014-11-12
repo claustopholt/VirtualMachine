@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Virtual Machine</title>
     <style>
-        .code { background:#EEEEEE; width:550px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
+        .code { background:#EEEEEE; width:550px; font-size: 11px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
     </style>
 </head>
 <body>
@@ -52,7 +52,7 @@ Click "Compile" to compile source code.
         <div style="width: 600px; float: left;">
             <strong>Live Memory</strong><br/>
             <div class="code">
-                <pre>
+                <pre id="memory">
                 </pre>
             </div>
         </div>
@@ -91,29 +91,37 @@ Click "Compile and run" to view console output from program.
 
             // Subscribe to the "bytecodes:{userid}" channel.
             var userid = getCookie("userid");
-            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid, "disassembly:" + userid, "console:" + userid]));
+            jsonSocket.send(JSON.stringify(["SUBSCRIBE",
+                        "bytecodes:" + userid,
+                        "disassembly:" + userid,
+                        "console:" + userid,
+                        "mem:" + userid]));
             //jsonSocket.send(JSON.stringify(["SUBSCRIBE", "disassembly:" + userid]));
         };
 
         jsonSocket.onmessage = function(messageEvent) {
-            console.log("JSON received:", messageEvent.data);
+            //console.log("JSON received:", messageEvent.data);
 
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
-            console.log(message);
+            //console.log(message);
 
             // If disassembly received, update UI.
             if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "disassembly:" + userid)
             {
-                console.log("DISASSEMBLY RECEIVED!");
                 document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
             }
 
             // If console received, update UI. TODO: Append.
             if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "console:" + userid)
             {
-                console.log("CONSOLE OUTPUT RECEIVED!");
                 document.getElementById("console").textContent = message.SUBSCRIBE[2];
+            }
+
+            // If mem received, update UI.
+            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "mem:" + userid)
+            {
+                document.getElementById("memory").textContent = message.SUBSCRIBE[2];
             }
         };
 
