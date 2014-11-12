@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Virtual Machine</title>
     <style>
-        .code { background:#EEEEEE; width:700px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
+        .code { background:#EEEEEE; width:550px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
     </style>
 </head>
 <body>
@@ -13,58 +13,69 @@
         Edit the source code below and click "Compile" to compile or "Compile and Run" to also execute.
     </p>
 
-    <strong>Source code</strong><br>
-    <textarea rows="10" cols="80" style="width:700px" id="sourcecode">
+    <div style="width: 100%; overflow: hidden;">
+        <div style="width: 600px; float: left;">
+            <strong>Source code</strong>
+            <br/>
+            <br/>
+            <textarea rows="10" style="width:550px" id="sourcecode">
 script
 {
-    a = 1;
+    a = 0;
     while (a < 10)
     {
         a = a + 1;
         output(a);
     }
 }
-    </textarea>
-    <br/>
-    <br/>
-
-    <button onclick="compile();">Compile</button>
-    <button onclick="compileAndRun();">Compile and Run</button>
-    <button>Stop</button>
-    <br/>
-    <br/>
-    <br/>
-
-    <strong>Disassembly</strong><br/>
-    <div class="code">
-        <pre id="disassembly">
-        </pre>
+            </textarea>
+            <br/>
+            <br/>
+            <button onclick="compile();">Compile</button>
+            <button onclick="compileAndRun();">Compile and Run</button>
+            <button>Stop</button>
+            <button onclick="reset();">Reset</button>
+        </div>
+        <div style="margin-left: 620px;">
+            <strong>Disassembly</strong><br/>
+            <div class="code">
+                <pre id="disassembly">
+Click "Compile" to compile source code.
+                </pre>
+            </div>
+        </div>
     </div>
     <br/>
     <br/>
 
-    <strong>Live Memory</strong><br/>
-    <div class="code">
-        0000<br/>
-        0002<br/>
-        0004
-    </div>
-    <br/>
-    <br/>
+    <div style="width: 100%; overflow: hidden;">
+        <div style="width: 600px; float: left;">
+            <strong>Live Memory</strong><br/>
+            <div class="code">
+                <pre>
+                </pre>
+            </div>
+        </div>
+        <div style="margin-left: 620px;">
+            <strong>Registers</strong><br/>
+            <div class="code">
+                <pre>
 
-    <strong>Registers</strong><br/>
-    <div class="code">
-        sp: 0002<br/>
-        pc: 0004
-    </div>
-    <br/>
-    <br/>
+                </pre>
+            </div>
+            <br/>
+            <br/>
 
-    <strong>Console</strong><br/>
-    <div class="code">
-        <pre id="console">
-        </pre>
+            <strong>Console</strong><br/>
+            <div class="code">
+                <pre id="console">
+Click "Compile and run" to view console output from program.
+                </pre>
+            </div>
+        </div>
     </div>
+
+
     <br/>
     <br/>
 
@@ -146,6 +157,10 @@ script
         xhr.open("POST", "http://127.0.0.1:5000/compile-and-run", true);
         xhr.send(formdata);
         return false;
+    }
+
+    function reset() {
+        location.reload();
     }
 
 </script>
