@@ -12,7 +12,7 @@ if __name__ == "__main__":
     cpu = Cpu(bytecodes, 512, 128, 0, 384)
 
     # Display start memory.
-    cpu.print_disassembly()
+    cpu.get_disassembly()
 
     # Execute program.
     cpu.execute_program()

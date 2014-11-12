@@ -1,7 +1,13 @@
 import sys
 import io
 import struct
+import json
+import pickle
 from vmopcode import VMOpcode
+
+
+class SerializableObject():
+    pass
 
 
 class Cpu():
@@ -29,6 +35,20 @@ class Cpu():
 
         # Create an output stream.
         self.out_stream = io.StringIO()
+
+    def serialize_cpu(self):
+        temp_obj = SerializableObject()
+        temp_obj.mem_size = self.mem_size
+        temp_obj.program_start_address = self.program_start_address
+        temp_obj.stack_start_address = self.stack_start_address
+        temp_obj.data_start_address = int(self.data_start_address)
+        temp_obj.mem = bytearray(self.mem_size)
+        temp_obj.mem[:] = self.mem
+        temp_obj.sp = self.sp
+        temp_obj.pc = self.pc
+        temp_obj.program_size = self.program_size
+        serialized_obj = pickle.dumps(temp_obj)
+        return serialized_obj
 
     def stack_pop(self):
         self.sp -= 2
@@ -151,12 +171,13 @@ class Cpu():
 
         sys.stdout.write("\r\n")
 
-    def print_disassembly(self):
+    def get_disassembly(self):
         sys.stdout.write("\r\n- DISASSEMBLY ----------------\r\n")
+
+        full_output = ""
 
         address = self.program_start_address
         while address < self.program_start_address + self.program_size:
-
             output = "{0:04x}:   ".format(address)
 
             # Get opcode and increment address to next word.
@@ -228,6 +249,10 @@ class Cpu():
 
             # Output text.
             sys.stdout.write("{0}\r\n".format(output))
+            full_output += "{0}\r\n".format(output)
+
+        # Simple solution for now.
+        return full_output
 
     def print_registers(self):
         sys.stdout.write("\r\n- REGISTERS ----------------\r\n")

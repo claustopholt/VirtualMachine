@@ -36,9 +36,9 @@ script
     <br/>
 
     <strong>Disassembly</strong><br/>
-    <div class="code" id="disassembly">
-        0000 ABCD 0101 INT 10<br/>
-        0002 0203 0201 0200 STFLD 0
+    <div class="code">
+        <pre id="disassembly">
+        </pre>
     </div>
     <br/>
     <br/>
@@ -81,19 +81,21 @@ script
 
             // Subscribe to the "bytecodes:{userid}" channel.
             var userid = getCookie("userid");
-            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid]));
+            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid, "disassembly:" + userid]));
+            //jsonSocket.send(JSON.stringify(["SUBSCRIBE", "disassembly:" + userid]));
         };
 
         jsonSocket.onmessage = function(messageEvent) {
             console.log("JSON received:", messageEvent.data);
 
-            // If bytecodes, update disassembly.
+            // If disassembly received, update UI.
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
             console.log(message);
-            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "bytecodes:" + userid)
+            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "disassembly:" + userid)
             {
-                console.log("W00t!");
+                console.log("DISASSEMBLY RECEIVED!");
+                document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
             }
         };
 
