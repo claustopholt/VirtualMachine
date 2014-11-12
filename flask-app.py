@@ -89,13 +89,17 @@ def compile_and_run_route():
     cpu.deserialize_cpu(serialized_cpu)
 
     # Execute.
+    counter = 0
     try:
         while True:
+            # Execute one step.
             cpu.execute_step()
+            counter += 1
 
             # TODO: Output mem properly.
-            output = cpu.get_mem()
-            redis_client.publish("mem:{0}".format(userid), output)
+            if counter % 5 == 0:
+                output = cpu.get_mem()
+                redis_client.publish("mem:{0}".format(userid), output)
 
             # TODO: Output console properly.
             output = cpu.out_stream.getvalue()

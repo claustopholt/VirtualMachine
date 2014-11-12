@@ -10,7 +10,8 @@
 <body>
     <h1>Virtual Machine</h1>
     <p>
-        Edit the source code below and click "Compile" to compile or "Compile and Run" to also execute.
+        Edit the source code below and click "Compile" to compile and view the disassembly (bytecodes) or "Compile and Run" to also execute.<br/>
+        A live memory view will be continuously updated and any output is shown in the console.
     </p>
 
     <div style="width: 100%; overflow: hidden;">
@@ -59,8 +60,7 @@ Click "Compile" to compile source code.
         <div style="margin-left: 620px;">
             <strong>Registers</strong><br/>
             <div class="code">
-                <pre>
-
+                <pre id="registers">
                 </pre>
             </div>
             <br/>
@@ -83,6 +83,8 @@ Click "Compile and run" to view console output from program.
 
 <script>
 
+     var counter = 0;
+
     function testJSON() {
         var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
         jsonSocket.onopen = function() {
@@ -100,11 +102,11 @@ Click "Compile and run" to view console output from program.
         };
 
         jsonSocket.onmessage = function(messageEvent) {
-            //console.log("JSON received:", messageEvent.data);
+            counter += 1;
+            document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + counter;
 
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
-            //console.log(message);
 
             // If disassembly received, update UI.
             if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "disassembly:" + userid)
