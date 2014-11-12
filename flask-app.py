@@ -96,21 +96,26 @@ def compile_and_run_route():
             cpu.execute_step()
             counter += 1
 
-            # TODO: Output mem properly.
-            if counter % 5 == 0:
+            # Publish not every single step, that takes too long.
+            if counter % 50 == 0:
+                # TODO: Output mem properly.
                 output = cpu.get_mem()
                 redis_client.publish("mem:{0}".format(userid), output)
 
-            # TODO: Output console properly.
-            output = cpu.out_stream.getvalue()
-            redis_client.publish("console:{0}".format(userid), output)
+                # TODO: Output console properly.
+                output = cpu.out_stream.getvalue()
+                redis_client.publish("console:{0}".format(userid), output)
 
-    except Exception as ex:
+    except Exception:
         print("Program ended. Crash?")
         pass
 
     finally:
         pass
+
+    # TODO: Output console properly.
+    output = cpu.out_stream.getvalue()
+    redis_client.publish("console:{0}".format(userid), output)
 
     return "Ok"
 

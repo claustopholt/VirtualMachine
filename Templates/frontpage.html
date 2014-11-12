@@ -32,10 +32,11 @@ script
             </textarea>
             <br/>
             <br/>
-            <button onclick="compile();">Compile</button>
-            <button onclick="compileAndRun();">Compile and Run</button>
+            <button onclick="compile('compile');">Compile</button>
+            <button onclick="compile('compile-and-run');">Compile and Run</button>
             <button>Stop</button>
             <button onclick="reset();">Reset</button>
+            <i>Status: <span id="connectionStatus" />.</i>
         </div>
         <div style="margin-left: 620px;">
             <strong>Disassembly</strong><br/>
@@ -79,26 +80,24 @@ Click "Compile and run" to view console output from program.
     <br/>
     <br/>
 
-    <i>Status: <span id="connectionStatus" />.</i>
-
 <script>
 
      var counter = 0;
 
     function testJSON() {
+        document.getElementById("connectionStatus").textContent = "Not connected";
         var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
         jsonSocket.onopen = function() {
             console.log("JSON socket connected!");
             document.getElementById("connectionStatus").textContent = "Connected";
 
-            // Subscribe to the "bytecodes:{userid}" channel.
+            // Subscribe to the various channels. Could have been done with "*:{userid}".
             var userid = getCookie("userid");
             jsonSocket.send(JSON.stringify(["SUBSCRIBE",
                         "bytecodes:" + userid,
                         "disassembly:" + userid,
                         "console:" + userid,
                         "mem:" + userid]));
-            //jsonSocket.send(JSON.stringify(["SUBSCRIBE", "disassembly:" + userid]));
         };
 
         jsonSocket.onmessage = function(messageEvent) {
@@ -108,32 +107,35 @@ Click "Compile and run" to view console output from program.
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
 
-            // If disassembly received, update UI.
-            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "disassembly:" + userid)
+            // Respond to messages coming in on subscribed channels.
+            if (message.SUBSCRIBE[0] == "message")
             {
-                document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
-            }
+                if(message.SUBSCRIBE[1] == "disassembly:" + userid)
+                {
+                    document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
+                }
 
-            // If console received, update UI. TODO: Append.
-            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "console:" + userid)
-            {
-                document.getElementById("console").textContent = message.SUBSCRIBE[2];
-            }
+                if(message.SUBSCRIBE[1] == "console:" + userid)
+                {
+                    document.getElementById("console").textContent = message.SUBSCRIBE[2];
+                }
 
-            // If mem received, update UI.
-            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "mem:" + userid)
-            {
-                document.getElementById("memory").textContent = message.SUBSCRIBE[2];
+                if(message.SUBSCRIBE[1] == "mem:" + userid)
+                {
+                    document.getElementById("memory").textContent = message.SUBSCRIBE[2];
+                }
             }
         };
 
         jsonSocket.onerror = function(message) {
             console.log("websocket to redis error:", message);
+            alert("Websocket error, please refresh page. Message: " + message)
             document.getElementById("connectionStatus").textContent = "Error";
         }
 
         jsonSocket.onclose = function(message) {
             console.log(("websocket to redis closed: ", message));
+            alert("Websocket closed, please refresh page. Message: " + message)
             document.getElementById("connectionStatus").textContent = "Not connected";
         }
     }
@@ -145,26 +147,14 @@ Click "Compile and run" to view console output from program.
             return (arr[0].trim() === cookie) ? arr[1] : prev;
         }, undefined);
 }
-    function compile() {
+    function compile(action) {
         var sourcecode = document.getElementById("sourcecode").value;
 
         var formdata = new FormData();
         formdata.append("sourcecode", sourcecode);
 
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://127.0.0.1:5000/compile", true);
-        xhr.send(formdata);
-        return false;
-    }
-
-    function compileAndRun() {
-        var sourcecode = document.getElementById("sourcecode").value;
-
-        var formdata = new FormData();
-        formdata.append("sourcecode", sourcecode);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://127.0.0.1:5000/compile-and-run", true);
+        xhr.open("POST", "http://127.0.0.1:5000/" + action, true);
         xhr.send(formdata);
         return false;
     }
