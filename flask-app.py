@@ -23,7 +23,6 @@ def generate_userid():
     return str(userid)
 
 def compile_sourcecode(sourcecode, userid):
-
     # Store sourcecode in Redis ("sourcecode:{userid}").
     redis_client.set("sourcecode:{0}".format(userid), sourcecode)
 
@@ -41,7 +40,6 @@ def compile_sourcecode(sourcecode, userid):
 
     # Publish the bytecodes on the "bytecodes:{userid}" channel.
     redis_client.publish("bytecodes:{0}".format(userid), bytecodes)
-
 
 @app.route("/")
 def frontpage():
@@ -75,8 +73,11 @@ def compile_route():
 
     # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
 
-    sourcecode = str(request.form["sourcecode"])
-    compile_sourcecode(sourcecode, userid)
+    try:
+        sourcecode = str(request.form["sourcecode"])
+        compile_sourcecode(sourcecode, userid)
+    except Exception as ex:
+        return "Syntax error: " + str(ex), 400
 
     return "Ok"
 
@@ -90,8 +91,11 @@ def compile_and_run_route():
 
     # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
 
-    sourcecode = str(request.form["sourcecode"])
-    compile_sourcecode(sourcecode, userid)
+    try:
+        sourcecode = str(request.form["sourcecode"])
+        compile_sourcecode(sourcecode, userid)
+    except Exception as ex:
+        return "Syntax error: " + str(ex), 400
 
     # TODO: Send a queue message to start executing cpu. In the mean time, just do it here.
 

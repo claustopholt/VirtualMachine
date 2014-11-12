@@ -150,14 +150,24 @@ Click "Compile and run" to view console output from program.
         }, undefined);
 }
     function compile(action) {
+        // Put sourcecode into form data.
         var sourcecode = document.getElementById("sourcecode").value;
-
         var formdata = new FormData();
         formdata.append("sourcecode", sourcecode);
 
+        // Send xhr request to web server.
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "http://127.0.0.1:5000/" + action, true);
         xhr.send(formdata);
+
+        // Handle errors (by showing an alert box).
+        xhr.onreadystatechange = function() {
+            if(this.readyState == 4) {
+                if(this.status >= 400) {
+                    alert(this.responseText);
+                }
+            }
+        }
         return false;
     }
 
