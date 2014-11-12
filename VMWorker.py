@@ -53,9 +53,9 @@ class VMWorker():
                 # Execute one step.
                 counter += 1
 
-                if cpu.counter > 1000:
+                if cpu.counter > 10000:
                     self.redis_client.publish("console:{0}".format(userid),
-                                              "Program has executed a maximum of 1000 instructions.\r\n")
+                                              "Program has executed a maximum of 10.000 instructions.\r\n")
                     self.redis_client.lrem("commandqueue", -1000, "compile:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
@@ -116,9 +116,8 @@ class VMWorker():
                             sourcecode = self.redis_client.get("sourcecode:{0}".format(userid))
                             self.compile_sourcecode(sourcecode, userid)
                         except Exception as ex:
-                            #return "Syntax error: " + str(ex), 400
-                            # TODO: Send message to user that a failure occurred.
-                            print("ERROR!!!")
+                            self.redis_client.publish("console:{0}".format(userid),
+                                                      "Syntax error: {0}.\r\n".format(ex))
 
                     elif command[0] == "compile-and-run":
                         userid = command[1]
@@ -126,13 +125,14 @@ class VMWorker():
                             sourcecode = self.redis_client.get("sourcecode:{0}".format(userid))
                             self.compile_sourcecode(sourcecode, userid)
                         except Exception as ex:
-                            #return "Syntax error: " + str(ex), 400
-                            # TODO: Send message to user that a failure occurred.
-                            print("ERROR!!!")
+                            self.redis_client.publish("console:{0}".format(userid),
+                                                      "Syntax error: {0}.\r\n".format(ex))
 
+                        # Run the program.
                         self.run_some_steps(userid)
 
                     elif command[0] == "continue":
+                        # Continue the program.
                         userid = command[1]
                         self.run_some_steps(userid)
 
