@@ -22,25 +22,6 @@ def generate_userid():
     # TODO: Log!
     return str(userid)
 
-def compile_sourcecode(sourcecode, userid):
-    # Store sourcecode in Redis ("sourcecode:{userid}").
-    redis_client.set("sourcecode:{0}".format(userid), sourcecode)
-
-    # Compile sourcecode written in browser. Store in Redis ("bytecodes:{userid}").
-    bytecodes = TestLanguage.compile_code(sourcecode)
-    redis_client.set("bytecodes:{0}".format(userid), bytecodes)
-
-    # Create the CPU. Store as serialized in Redis ("cpu:{userid}").
-    cpu = Cpu(bytecodes, 512, 128, 0, 384)
-    redis_client.set("cpu:{0}".format(userid), cpu.serialize_cpu())
-
-    # Get disassembly and publish on "disassembly:{userid}" channel.
-    disassembly = cpu.get_disassembly()
-    redis_client.publish("disassembly:{0}".format(userid), disassembly)
-
-    # Publish the bytecodes on the "bytecodes:{userid}" channel.
-    redis_client.publish("bytecodes:{0}".format(userid), bytecodes)
-
 @app.route("/")
 def frontpage():
     # Check for userid cookie.
@@ -64,6 +45,7 @@ def frontpage():
     return resp
 
 
+# TODO: Wrapper method that checks userid cookie!
 @app.route("/compile", methods=["POST"])
 def compile_route():
     # Check userid. If not found, abort.
@@ -71,14 +53,8 @@ def compile_route():
     if not userid:
         return "Request forbidden because no userid was found.", 403
 
-    # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
-
-    try:
-        sourcecode = str(request.form["sourcecode"])
-        compile_sourcecode(sourcecode, userid)
-    except Exception as ex:
-        return "Syntax error: " + str(ex), 400
-
+    # Push the compile command to the redis queue "commandqueue".
+    redis_client.lpush("commandqueue", "{0}|||{1}|||{2}".format("compile", userid, str(request.form["sourcecode"])))
     return "Ok"
 
 
@@ -89,50 +65,8 @@ def compile_and_run_route():
     if not userid:
         return "Request forbidden because no userid was found.", 403
 
-    # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
-
-    try:
-        sourcecode = str(request.form["sourcecode"])
-        compile_sourcecode(sourcecode, userid)
-    except Exception as ex:
-        return "Syntax error: " + str(ex), 400
-
-    # TODO: Send a queue message to start executing cpu. In the mean time, just do it here.
-
-    # Deserialize and get ready to execute.
-    serialized_cpu = redis_client.get("cpu:{0}".format(userid))
-    cpu = Cpu([], 512, 128, 0, 384)
-    cpu.deserialize_cpu(serialized_cpu)
-
-    # Execute.
-    counter = 0
-    try:
-        while True:
-            # Execute one step.
-            cpu.execute_step()
-            counter += 1
-
-            # Publish not every single step, that takes too long.
-            if counter % 50 == 0:
-                # TODO: Output mem properly.
-                output = cpu.get_mem()
-                redis_client.publish("mem:{0}".format(userid), output)
-
-                # TODO: Output console properly.
-                output = cpu.out_stream.getvalue()
-                redis_client.publish("console:{0}".format(userid), output)
-
-    except Exception:
-        print("Program ended. Crash?")
-        pass
-
-    finally:
-        pass
-
-    # TODO: Output console properly.
-    output = cpu.out_stream.getvalue()
-    redis_client.publish("console:{0}".format(userid), output)
-
+    # Push the compile-and-run command to the redis queue "commandqueue".
+    redis_client.lpush("commandqueue", "{0}|||{1}|||{2}".format("compile-and-run", userid, str(request.form["sourcecode"])))
     return "Ok"
 
 

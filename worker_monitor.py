@@ -1,6 +1,6 @@
 from multiprocessing import Process
 import time
-import worker
+import VMWorker
 
 
 def start_monitor():
@@ -17,7 +17,9 @@ def start_monitor():
 
         # Create new processes until max number is reached.
         while len(process_list) < 3:
-            new_process = Process(target=worker.start_worker, args=())
+            print("spawning new")
+            worker_obj = VMWorker.VMWorker()
+            new_process = Process(target=worker_obj.start_worker, args=())
             new_process.start()
             process_list.append(new_process)
 
