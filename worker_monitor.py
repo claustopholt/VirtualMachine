@@ -17,7 +17,6 @@ def start_monitor():
 
         # Create new processes until max number is reached.
         while len(process_list) < 3:
-            print("spawning new")
             worker_obj = VMWorker.VMWorker()
             new_process = Process(target=worker_obj.start_worker, args=())
             new_process.start()

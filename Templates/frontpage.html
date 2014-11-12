@@ -72,7 +72,6 @@ Click "Compile" to compile source code.
             <strong>Console</strong><br/>
             <div class="code">
                 <pre id="console">
-Click "Compile and run" to view console output from program.
                 </pre>
             </div>
         </div>
@@ -119,7 +118,7 @@ Click "Compile and run" to view console output from program.
 
                 if(message.SUBSCRIBE[1] == "console:" + userid)
                 {
-                    document.getElementById("console").textContent = message.SUBSCRIBE[2];
+                    document.getElementById("console").textContent += message.SUBSCRIBE[2];
                 }
 
                 if(message.SUBSCRIBE[1] == "mem:" + userid)
@@ -150,6 +149,9 @@ Click "Compile and run" to view console output from program.
         }, undefined);
 }
     function compile(action) {
+
+        document.getElementById("console").textContent = "";
+
         // Put sourcecode into form data.
         var sourcecode = document.getElementById("sourcecode").value;
         var formdata = new FormData();

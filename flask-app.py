@@ -56,6 +56,7 @@ def compile_route():
     # Store sourcecode then push the compile command to the redis queue "commandqueue".
     redis_client.lrem("commandqueue", -1000, "compile:{0}".format(userid))
     redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
+    redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
     redis_client.set("sourcecode:{0}".format(userid), request.form["sourcecode"])
     redis_client.lpush("commandqueue", "compile:{0}".format(userid))
     return "Ok"
@@ -71,6 +72,7 @@ def compile_and_run_route():
     # Store sourcecode then push the compile-and-run command to the redis queue "commandqueue".
     redis_client.lrem("commandqueue", -1000, "compile:{0}".format(userid))
     redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
+    redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
     redis_client.set("sourcecode:{0}".format(userid), request.form["sourcecode"])
     redis_client.lpush("commandqueue", "compile-and-run:{0}".format(userid))
     return "Ok"

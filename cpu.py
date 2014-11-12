@@ -27,14 +27,14 @@ class Cpu():
         self.sp = stack_start_address
         self.pc = program_start_address
 
+        # Create a counter for how many instructions have been processed.
+        self.counter = 0
+
         # Convert code to bytes and and store in self.mem.
         # x64 is little-endinan, so 1000 decimal = 0x03e8 is stored as e803 and 10 decimal = 0a, stored as 0a00.
         program_bytes = struct.pack("{0}h".format(len(code)), *code)
         self.mem[program_start_address:program_start_address + len(program_bytes)] = program_bytes
         self.program_size = len(program_bytes)
-
-        # Create an output stream.
-        self.out_stream = io.StringIO()
 
     def serialize_cpu(self):
         temp_obj = SerializableObject()
@@ -46,6 +46,7 @@ class Cpu():
         temp_obj.mem[:] = self.mem
         temp_obj.sp = self.sp
         temp_obj.pc = self.pc
+        temp_obj.counter = self.counter
         temp_obj.program_size = self.program_size
         serialized_obj = pickle.dumps(temp_obj)
         return serialized_obj
@@ -59,6 +60,7 @@ class Cpu():
         self.mem[:] = temp_obj.mem
         self.sp = temp_obj.sp
         self.pc = temp_obj.pc
+        self.counter = temp_obj.counter
         self.program_size = temp_obj.program_size
 
     def stack_pop(self):
@@ -90,10 +92,13 @@ class Cpu():
 
     def execute_step(self):
 
+        output = ""
+
         try:
             opcode_word = struct.unpack("h", str(self.mem[self.pc:self.pc + 2]))[0]
             opcode = VMOpcode._value2member_map_[opcode_word]
             self.pc += 2
+            self.counter += 1
 
             if opcode == VMOpcode.int:
                 code_value = self.code_next()
@@ -116,8 +121,7 @@ class Cpu():
                 self.stack_push(int(pop2_value / pop1_value))
             elif opcode == VMOpcode.output:
                 pop1_value = self.stack_pop()
-                #sys.stdout.write("{0}\r\n".format(pop1_value))
-                self.out_stream.write(u"{0}\r\n".format(pop1_value))
+                output = "{0}\r\n".format(pop1_value)
             elif opcode == VMOpcode.branch:
                 offset = self.code_next()
                 self.pc = self.program_start_address + (offset * 2)
@@ -162,6 +166,8 @@ class Cpu():
 
         except not Exception as ex:
             raise "Program crash!! Message: {0}\r\n".format(ex.message)
+
+        return output
 
     def get_mem(self):
         # Output memory as words (little-endian).
