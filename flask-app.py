@@ -23,6 +23,10 @@ def generate_userid():
     return str(userid)
 
 def compile_sourcecode(sourcecode, userid):
+
+    # Store sourcecode in Redis ("sourcecode:{userid}").
+    redis_client.set("sourcecode:{0}".format(userid), sourcecode)
+
     # Compile sourcecode written in browser. Store in Redis ("bytecodes:{userid}").
     bytecodes = TestLanguage.compile_code(sourcecode)
     redis_client.set("bytecodes:{0}".format(userid), bytecodes)
@@ -41,13 +45,21 @@ def compile_sourcecode(sourcecode, userid):
 
 @app.route("/")
 def frontpage():
-    # Render response from template.
-    resp = make_response(render_template("frontpage.html"))
-
     # Check for userid cookie.
     userid_cookie = request.cookies.get("userid")
     if not userid_cookie:
         userid = generate_userid()
+    else:
+        userid = userid_cookie
+
+    # Get latest sourcecode from Redis ("sourcecode:{userid}").
+    sourcecode = redis_client.get("sourcecode:{0}".format(userid))
+
+    # Render response from template.
+    resp = make_response(render_template("frontpage.html", sourcecode=sourcecode))
+
+    # Set cookie if it wasn't present in the request.
+    if not userid_cookie:
         resp.set_cookie("userid", userid)
 
     # Render frontpage.

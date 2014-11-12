@@ -20,6 +20,7 @@
             <br/>
             <br/>
             <textarea rows="10" style="width:550px" id="sourcecode">
+{% if sourcecode %}{{ sourcecode }}{% else %}
 script
 {
     a = 0;
@@ -29,6 +30,7 @@ script
         output(a);
     }
 }
+{% endif %}
             </textarea>
             <br/>
             <br/>
