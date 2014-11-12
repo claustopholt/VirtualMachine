@@ -50,6 +50,17 @@ class Cpu():
         serialized_obj = pickle.dumps(temp_obj)
         return serialized_obj
 
+    def deserialize_cpu(self, serialized_obj):
+        temp_obj = pickle.loads(serialized_obj)
+        self.mem_size = temp_obj.mem_size
+        self.program_start_address = temp_obj.program_start_address
+        self.stack_start_address = temp_obj.stack_start_address
+        self.data_start_address = temp_obj.data_start_address
+        self.mem[:] = temp_obj.mem
+        self.sp = temp_obj.sp
+        self.pc = temp_obj.pc
+        self.program_size = temp_obj.program_size
+
     def stack_pop(self):
         self.sp -= 2
         pop_value = struct.unpack("h", str(self.mem[self.sp:self.sp + 2]))[0]
@@ -172,10 +183,7 @@ class Cpu():
         sys.stdout.write("\r\n")
 
     def get_disassembly(self):
-        sys.stdout.write("\r\n- DISASSEMBLY ----------------\r\n")
-
         full_output = ""
-
         address = self.program_start_address
         while address < self.program_start_address + self.program_size:
             output = "{0:04x}:   ".format(address)
@@ -247,11 +255,10 @@ class Cpu():
             elif opcode == VMOpcode.halt:
                 output += "           HALT"
 
-            # Output text.
-            sys.stdout.write("{0}\r\n".format(output))
+            # Add to output text.
             full_output += "{0}\r\n".format(output)
 
-        # Simple solution for now.
+        # Simple solution for now -- just return string.
         return full_output
 
     def print_registers(self):

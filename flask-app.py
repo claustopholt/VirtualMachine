@@ -22,6 +22,22 @@ def generate_userid():
     # TODO: Log!
     return str(userid)
 
+def compile_sourcecode(sourcecode, userid):
+    # Compile sourcecode written in browser. Store in Redis ("bytecodes:{userid}").
+    bytecodes = TestLanguage.compile_code(sourcecode)
+    redis_client.set("bytecodes:{0}".format(userid), bytecodes)
+
+    # Create the CPU. Store as serialized in Redis ("cpu:{userid}").
+    cpu = Cpu(bytecodes, 512, 128, 0, 384)
+    redis_client.set("cpu:{0}".format(userid), cpu.serialize_cpu())
+
+    # Get disassembly and publish on "disassembly:{userid}" channel.
+    disassembly = cpu.get_disassembly()
+    redis_client.publish("disassembly:{0}".format(userid), disassembly)
+
+    # Publish the bytecodes on the "bytecodes:{userid}" channel.
+    redis_client.publish("bytecodes:{0}".format(userid), bytecodes)
+
 
 @app.route("/")
 def frontpage():
@@ -38,30 +54,42 @@ def frontpage():
     return resp
 
 
-@app.route("/compile", methods=["GET", "POST"])
-def compile_sourcecode():
+@app.route("/compile", methods=["POST"])
+def compile_route():
     # Check userid. If not found, abort.
-    userid_cookie = request.cookies.get("userid")
-    if not userid_cookie:
+    userid = request.cookies.get("userid")
+    if not userid:
         return "Request forbidden because no userid was found.", 403
 
     # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
 
-    # Compile sourcecode written in browser. Store in Redis ("bytecodes:{userid}").
     sourcecode = str(request.form["sourcecode"])
-    bytecodes = TestLanguage.compile_code(sourcecode)
-    redis_client.set("bytecodes:{0}".format(userid_cookie), bytecodes)
+    compile_sourcecode(sourcecode, userid)
 
-    # Create the CPU. Store as serialized in Redis ("cpu:{userid}").
-    cpu = Cpu(bytecodes, 512, 128, 0, 384)
-    redis_client.set("cpu:{0}".format(userid_cookie), cpu.serialize_cpu())
+    return "Ok"
 
-    # Get disassembly and publish on "disassembly:{userid}" channel.
-    disassembly = cpu.get_disassembly()
-    redis_client.publish("disassembly:{0}".format(userid_cookie), disassembly)
 
-    # Publish the bytecodes on the "bytecodes:{userid}" channel.
-    redis_client.publish("bytecodes:{0}".format(userid_cookie), bytecodes)
+@app.route("/compile-and-run", methods=["POST"])
+def compile_and_run_route():
+    # Check userid. If not found, abort.
+    userid = request.cookies.get("userid")
+    if not userid:
+        return "Request forbidden because no userid was found.", 403
+
+    # TODO: This can all be farmed off to a worker when they are available. Just store job in queue in Redis!!!
+
+    sourcecode = str(request.form["sourcecode"])
+    compile_sourcecode(sourcecode, userid)
+
+    # TODO: Send a queue message to start executing cpu. In the mean time, just do it here.
+    serialized_cpu = redis_client.get("cpu:{0}".format(userid))
+    cpu = Cpu([], 512, 128, 0, 384)
+    cpu.deserialize_cpu(serialized_cpu)
+    cpu.execute_program()
+
+    # TODO: Output.
+    output = cpu.out_stream.getvalue()
+    redis_client.publish("console:{0}".format(userid), output)
 
     return "Ok"
 

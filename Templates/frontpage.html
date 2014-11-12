@@ -29,7 +29,7 @@ script
     <br/>
 
     <button onclick="compile();">Compile</button>
-    <button>Compile and Run</button>
+    <button onclick="compileAndRun();">Compile and Run</button>
     <button>Stop</button>
     <br/>
     <br/>
@@ -62,9 +62,8 @@ script
 
     <strong>Console</strong><br/>
     <div class="code">
-        1<br/>
-        2<br/>
-        Program finished.
+        <pre id="console">
+        </pre>
     </div>
     <br/>
     <br/>
@@ -81,21 +80,29 @@ script
 
             // Subscribe to the "bytecodes:{userid}" channel.
             var userid = getCookie("userid");
-            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid, "disassembly:" + userid]));
+            jsonSocket.send(JSON.stringify(["SUBSCRIBE", "bytecodes:" + userid, "disassembly:" + userid, "console:" + userid]));
             //jsonSocket.send(JSON.stringify(["SUBSCRIBE", "disassembly:" + userid]));
         };
 
         jsonSocket.onmessage = function(messageEvent) {
             console.log("JSON received:", messageEvent.data);
 
-            // If disassembly received, update UI.
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
             console.log(message);
+
+            // If disassembly received, update UI.
             if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "disassembly:" + userid)
             {
                 console.log("DISASSEMBLY RECEIVED!");
                 document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
+            }
+
+            // If console received, update UI. TODO: Append.
+            if(message.SUBSCRIBE[0] == "message" && message.SUBSCRIBE[1] == "console:" + userid)
+            {
+                console.log("CONSOLE OUTPUT RECEIVED!");
+                document.getElementById("console").textContent = message.SUBSCRIBE[2];
             }
         };
 
@@ -125,6 +132,18 @@ script
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "http://127.0.0.1:5000/compile", true);
+        xhr.send(formdata);
+        return false;
+    }
+
+    function compileAndRun() {
+        var sourcecode = document.getElementById("sourcecode").value;
+
+        var formdata = new FormData();
+        formdata.append("sourcecode", sourcecode);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://127.0.0.1:5000/compile-and-run", true);
         xhr.send(formdata);
         return false;
     }
