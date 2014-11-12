@@ -53,8 +53,9 @@ def compile_route():
     if not userid:
         return "Request forbidden because no userid was found.", 403
 
-    # Push the compile command to the redis queue "commandqueue".
-    redis_client.lpush("commandqueue", "{0}|||{1}|||{2}".format("compile", userid, str(request.form["sourcecode"])))
+    # Store sourcecode then push the compile command to the redis queue "commandqueue".
+    redis_client.set("sourcecode:{0}".format(userid), request.form["sourcecode"])
+    redis_client.lpush("commandqueue", "compile:{0}".format(userid))
     return "Ok"
 
 
@@ -65,8 +66,9 @@ def compile_and_run_route():
     if not userid:
         return "Request forbidden because no userid was found.", 403
 
-    # Push the compile-and-run command to the redis queue "commandqueue".
-    redis_client.lpush("commandqueue", "{0}|||{1}|||{2}".format("compile-and-run", userid, str(request.form["sourcecode"])))
+    # Store sourcecode then push the compile-and-run command to the redis queue "commandqueue".
+    redis_client.set("sourcecode:{0}".format(userid), request.form["sourcecode"])
+    redis_client.lpush("commandqueue", "compile-and-run:{0}".format(userid))
     return "Ok"
 
 

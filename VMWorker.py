@@ -42,12 +42,12 @@ class VMWorker():
                 # Pop command from command queue in Redis.
                 command_string = self.redis_client.rpop("commandqueue")
                 if command_string:
-                    command = str.split(command_string, '|||')
+                    command = str.split(command_string, ':')
                     print("Worker {0} got command from Redis: {1}".format(pid, command))
                     if command[0] == "compile":
                         try:
                             userid = command[1]
-                            sourcecode = command[2]
+                            sourcecode = self.redis_client.get("sourcecode:{0}".format(userid))
                             self.compile_sourcecode(sourcecode, userid)
                         except Exception as ex:
                             #return "Syntax error: " + str(ex), 400
@@ -57,7 +57,7 @@ class VMWorker():
                     elif command[0] == "compile-and-run":
                         try:
                             userid = command[1]
-                            sourcecode = command[2]
+                            sourcecode = self.redis_client.get("sourcecode:{0}".format(userid))
                             self.compile_sourcecode(sourcecode, userid)
                         except Exception as ex:
                             #return "Syntax error: " + str(ex), 400
