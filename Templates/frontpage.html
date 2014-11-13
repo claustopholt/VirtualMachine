@@ -4,69 +4,93 @@
     <meta charset="UTF-8">
     <title>Virtual Machine</title>
     <style>
-        .code { background:#EEEEEE; width:550px; font-size: 11px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace; }
+        .code { background: #EEEEEE; font-size: 11px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono'; }
     </style>
 </head>
 <body>
-    <h1>Virtual Machine</h1>
-    <p>
-        Edit the source code below and click "Compile" to compile and view the disassembly (bytecodes) or "Compile and Run" to also execute.<br/>
-        A live memory view will be continuously updated and any output is shown in the console.
-    </p>
-
+    <h1>The Virtual Machine</h1>
+    <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
+        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
+        <p>
+            This is a demonstration of a simulated, distributed, stack-based microprocessor (a virtual machine) with a
+            hypothetical integer-only instruction set. Programs are written in a simple high-level language which supports
+            limited integer math, while-loops, if-else statements, comments and console output.
+        <p/>
+        <p>
+            Each program's source code is compiled to bytecodes and placed into a 512-byte memory block, which the virtual
+            machine's "cpu" operates on. The "cpu" is actually distributed across a number of isolated worker processes,
+            which can scale across physical (or virtual) hardware. The memory blocks are stored in a central
+            <a href="http://redis.io" target="_new">Redis</a> cache and the worker threads periodically serialize and
+            de-serialize the blocks in order to execute code.
+        <p/>
+        <p>
+            All data from the virtual machine, such as memory, registers, disassembly and console output is streamed back
+            to the user with websockets using a pub/sub pattern. The virtual machine is written in Python 2.7. The simple
+            language uses the <a href="http://www.antlr.org" target="_new">ANTLR4</a> lexer/parser. The website uses
+            <a href="http://flask.pocoo.org/" target="_new">Flask</a> and everything is hosted on
+            <a href="http://www.digitalocean.com" target="_new">DigitalOcean</a>.
+        </p>
+        <p>
+            Please note: This is a toy project, used to examine various architectural possibilities and patterns. It is
+            <i>not</i> a production-like implementation of a virtual machine. That said, you are welcome to
+            <a href="https://github.com/claustopholt/VirtualMachine/tree/Step3" target="_new">clone the source code</a>.
+        </p>
+        <p>
+            In order to see it in action, simply edit the source code and click "Compile" or "Compile and Run".
+        </p>
+    </div>
     <div style="width: 100%; overflow: hidden;">
-        <div style="width: 600px; float: left;">
-            <strong>Source code</strong>
+        <div style="width: 460px; float: left;">
+            <strong>Source code</strong> (<a href="/examples" target="_new">Examples</a>)
             <br/>
             <br/>
-            <textarea rows="10" style="width:550px" id="sourcecode">
-{% if sourcecode %}{{ sourcecode }}{% else %}
-script
+            <textarea rows="15" style="width:450px" id="sourcecode">
+{% if sourcecode %}{{ sourcecode }}{% else %}script
 {
     a = 0;
-    while (a < 10)
+    b = 2;
+    while (a < 50)
     {
-        a = a + 1;
-        output(a);
+        a = a + b;
+        if (a > 3)
+        {
+            output(a);
+        }
     }
-}
-{% endif %}
-            </textarea>
+}{% endif %}</textarea>
             <br/>
             <br/>
             <button onclick="compile('compile');">Compile</button>
             <button onclick="compile('compile-and-run');">Compile and Run</button>
-            <button>Stop</button>
             <button onclick="reset();">Reset</button>
             <i>Status: <span id="connectionStatus" />.</i>
-        </div>
-        <div style="margin-left: 620px;">
-            <strong>Disassembly</strong><br/>
-            <div class="code">
+            <br/>
+            <br/>
+            <strong>Disassembly</strong> (<a href="/disassembly" target="_new">What is it?</a>)
+            <br/>
+            <div class="code" style="width:450px;">
                 <pre id="disassembly">
-Click "Compile" to compile source code.
                 </pre>
             </div>
-        </div>
-    </div>
-    <br/>
-    <br/>
+            <br/>
+            <br/>
 
-    <div style="width: 100%; overflow: hidden;">
-        <div style="width: 600px; float: left;">
+        </div>
+
+        <div style="margin-left: 480px; width:530px">
+
             <strong>Live Memory</strong><br/>
             <div class="code">
                 <pre id="memory">
                 </pre>
             </div>
-        </div>
-        <div style="margin-left: 620px;">
+            <br/>
+
             <strong>Registers</strong><br/>
             <div class="code">
                 <pre id="registers">
                 </pre>
             </div>
-            <br/>
             <br/>
 
             <strong>Console</strong><br/>
@@ -83,7 +107,7 @@ Click "Compile" to compile source code.
 
 <script>
 
-     var counter = 0;
+     var message_counter = 0;
 
     function testJSON() {
         document.getElementById("connectionStatus").textContent = "Not connected";
@@ -102,8 +126,8 @@ Click "Compile" to compile source code.
         };
 
         jsonSocket.onmessage = function(messageEvent) {
-            counter += 1;
-            document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + counter;
+            message_counter += 1;
+            document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + message_counter;
 
             var userid = getCookie("userid");
             message = JSON.parse(messageEvent.data);
@@ -159,7 +183,7 @@ Click "Compile" to compile source code.
 
         // Send xhr request to web server.
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://127.0.0.1:5000/" + action, true);
+        xhr.open("POST", "http://virtualmachine.topholt.com:5000/" + action, true);
         xhr.send(formdata);
 
         // Handle errors (by showing an alert box).

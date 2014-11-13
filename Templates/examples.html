@@ -5,9 +5,65 @@
     <title>The Virtual Machine - Examples</title>
 </head>
 <body>
-    <h1>Help for the Virtual Machine</h1>
-    <p>
-
-    </p>
+    <h1>Source Code Examples</h1>
+    <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
+        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
+        <p>
+            Here a very simple program that outputs 5:
+            <pre>
+    script
+    {
+        output(2 + 3);
+    }
+            </pre>
+        <p/>
+        <p>
+            Here's a program that counts from 0 to 10:
+            <pre>
+    script
+    {
+        # Use a variable to count.
+        a = 0;
+        while (a < 10)
+        {
+            a = a + 1;
+            output(a);
+        }
+    }
+            </pre>
+        <p/>
+        <p>
+            Here's a program that uses if-else statements and some convoluted math to show off parentheses:
+            <pre>
+    script
+    {
+        a = 5;
+        b = 10;
+        if (a * 3 - (2 * 2) > b)
+        {
+            output(a);
+        }
+        else
+        {
+            output(b);
+        }
+    }
+            </pre>
+        <p/>
+        <p>
+            Here's an infinite loop. The virtual machine will automatically stop after 10.000 instructions have been executed:
+            <pre>
+    script
+    {
+        a = 0;
+        while (1)
+        {
+            a = a + 1;
+        }
+    }
+            </pre>
+            Tip: Try to refresh the browser as the program runs.
+        <p/>
+    </div>
 </body>
 </html>
