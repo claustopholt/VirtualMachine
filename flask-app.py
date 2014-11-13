@@ -13,10 +13,6 @@ app = Flask(__name__)
 # Create a redis connection.
 redis_client = redis.StrictRedis(host="redis.topholt.com", port=6379, db=0)
 
-# Start worker monitor thread.
-monitor_thread = threading.Thread(target=worker_monitor.start_monitor, args=())
-monitor_thread.start()
-
 # A new user is any user that doesn't have a "userid" cookie.
 def generate_userid():
     # Generate a new userid in Redis.
@@ -97,4 +93,4 @@ def disassembly_route():
 if __name__ == "__main__":
 
     # Run Flask app.
-    app.run(host="0.0.0.0", debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", debug=True, use_reloader=False)

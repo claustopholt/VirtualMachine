@@ -7,7 +7,7 @@ from cpu import Cpu
 
 class VMWorker():
 
-    redis_client = redis.StrictRedis(host="128.199.43.95", port=6379, db=0)
+    redis_client = redis.StrictRedis(host="redis.topholt.com", port=6379, db=0)
     pid = os.getpid()
 
     def __init__(self):

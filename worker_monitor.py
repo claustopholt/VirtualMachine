@@ -26,3 +26,8 @@ def start_monitor():
 
         # Sleep for a while.
         time.sleep(1)
+
+
+if __name__ == "__main__":
+
+    start_monitor()
