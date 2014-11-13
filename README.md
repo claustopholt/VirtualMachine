@@ -22,4 +22,4 @@ Please note: This is a toy project, used to examine various architectural ideas 
 
 Pre-requisites (pip): enum34, antlr4-python2-runtime, redis and Flask.
 
-##For a running demo and a more in-depth explanation, please visit [topholt.com](http://virtualmachine.topholt.com:5000).
+###For a running demo and a more in-depth explanation, please visit [topholt.com](http://virtualmachine.topholt.com:5000).
