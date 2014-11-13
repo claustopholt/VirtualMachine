@@ -49,6 +49,7 @@ class VMWorker():
         # Execute.
         counter = 0
         try:
+            console_output = ""
             while True:
                 # Execute one step.
                 counter += 1
@@ -61,19 +62,18 @@ class VMWorker():
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
                     raise "Max number of instructions reached."
 
-                output = cpu.execute_step()
-                if output:
-                    self.redis_client.publish("console:{0}".format(userid), output)
+                console_output = console_output + cpu.execute_step()
+                mem_output = cpu.get_mem()
 
                 # Publish not every single step, that takes too long.
-                if counter % 20 == 0:
+                if counter % 1000 == 0:
                     # TODO: Output mem properly.
-                    output = cpu.get_mem()
-                    self.redis_client.publish("mem:{0}".format(userid), output)
+                    self.redis_client.publish("mem:{0}".format(userid), mem_output)
+                    self.redis_client.publish("console:{0}".format(userid), console_output)
+                    console_output = ""
 
                 # TODO: Timeslices instead of op counters? Simple to implement!
-
-                if counter >= 200:
+                if counter >= 2000:
                     # Serialize cpu.
                     self.redis_client.set("cpu:{0}".format(userid), cpu.serialize_cpu())
 
@@ -84,20 +84,17 @@ class VMWorker():
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
                     self.redis_client.lpush("commandqueue", "continue:{0}".format(userid))
 
-                    self.redis_client.publish("console:{0}".format(userid),
-                                              "Worker {0} serialized cpu and relinquished it.\r\n".format(self.pid))
-
-                    # A useless sleep just to potentially let another worker grab this job first.
-                    #time.sleep(1)
                     break
 
         except Exception:
-            self.redis_client.publish("console:{0}".format(userid), "Execution complete.\r\n")
             print("Program ended. Crash?")
-            pass
 
         finally:
-            pass
+            # Output any remaining console output.
+            self.redis_client.publish("mem:{0}".format(userid), mem_output)
+            self.redis_client.publish("console:{0}".format(userid), console_output)
+            self.redis_client.publish("console:{0}".format(userid),
+                                      "Worker {0} serialized cpu and relinquished it.\r\n".format(self.pid))
 
     def start_worker(self):
         try:
@@ -124,12 +121,13 @@ class VMWorker():
                         try:
                             sourcecode = self.redis_client.get("sourcecode:{0}".format(userid))
                             self.compile_sourcecode(sourcecode, userid)
+
+                            # Run the program.
+                            self.run_some_steps(userid)
+
                         except Exception as ex:
                             self.redis_client.publish("console:{0}".format(userid),
                                                       "Syntax error: {0}.\r\n".format(ex))
-
-                        # Run the program.
-                        self.run_some_steps(userid)
 
                     elif command[0] == "continue":
                         # Continue the program.

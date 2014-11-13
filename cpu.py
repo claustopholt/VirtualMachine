@@ -164,7 +164,7 @@ class Cpu():
             if self.pc >= self.mem_size:
                 raise "Program counter exceeded memory size, terminating.\r\n"
 
-        except not Exception as ex:
+        except Exception as ex:
             raise "Program crash!! Message: {0}\r\n".format(ex.message)
 
         return output

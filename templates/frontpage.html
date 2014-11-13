@@ -134,6 +134,7 @@
 
                     if(message.SUBSCRIBE[1] == "console:" + userid)
                     {
+                        console.log(message.SUBSCRIBE[2]);
                         document.getElementById("console").textContent += message.SUBSCRIBE[2];
                     }
 
