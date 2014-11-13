@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        .code { background: #EEEEEE; font-size: 11px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono'; }
+    </style>
+</head>
+<body>
+    <div style="width:100%;">
+        <div style="width: 1010px; margin: 0 auto;">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% block script %}{% endblock %}
+</body>
+</html>

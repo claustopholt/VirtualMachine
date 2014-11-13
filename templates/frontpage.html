@@ -1,51 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Virtual Machine</title>
-    <style>
-        .code { background: #EEEEEE; font-size: 11px; font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono'; }
-    </style>
-</head>
-<body>
-    <h1>The Virtual Machine</h1>
-    <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
-        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
-        <p>
-            This is a demonstration of a simulated, distributed, stack-based microprocessor (a virtual machine) with a
-            hypothetical integer-only instruction set. Programs are written in a simple high-level language which supports
-            limited integer math, while-loops, if-else statements, comments and console output.
-        <p/>
-        <p>
-            Each program's source code is compiled to bytecodes and placed into a 512-byte memory block, which the virtual
-            machine's "cpu" operates on. The "cpu" is actually distributed across a number of isolated worker processes,
-            which can scale across physical (or virtual) hardware. The memory blocks are stored in a central
-            <a href="http://redis.io" target="_new">Redis</a> cache and the worker threads periodically serialize and
-            de-serialize the blocks in order to execute code.
-        <p/>
-        <p>
-            All data from the virtual machine, such as memory, registers, disassembly and console output is streamed back
-            to the user with websockets using a pub/sub pattern. The virtual machine is written in Python 2.7. The simple
-            language uses the <a href="http://www.antlr.org" target="_new">ANTLR4</a> lexer/parser. The website uses
-            <a href="http://flask.pocoo.org/" target="_new">Flask</a> and everything is hosted on
-            <a href="http://www.digitalocean.com" target="_new">DigitalOcean</a>.
-        </p>
-        <p>
-            Please note: This is a toy project, used to examine various architectural possibilities and patterns. It is
-            <i>not</i> a production-like implementation of a virtual machine. That said, you are welcome to
-            <a href="https://github.com/claustopholt/VirtualMachine/tree/Step3" target="_new">clone the source code</a>.
-        </p>
-        <p>
-            In order to see it in action, simply edit the source code and click "Compile" or "Compile and Run".
-        </p>
-    </div>
-    <div style="width: 100%; overflow: hidden;">
-        <div style="width: 460px; float: left;">
-            <strong>Source code</strong> (<a href="/examples" target="_new">Examples</a>)
-            <br/>
-            <br/>
-            <textarea rows="15" style="width:450px" id="sourcecode">
-{% if sourcecode %}{{ sourcecode }}{% else %}script
+{% extends "layout.html" %}
+
+{%block title %}Virtual Machine{% endblock %}
+
+{% block content %}
+            <h1>The Virtual Machine</h1>
+            <div style="width: 1000px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
+                <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>.</i>
+                <p>
+                    This is a demonstration of a simulated, distributed, stack-based microprocessor (a virtual machine) with a
+                    hypothetical integer-only instruction set. Programs are written in a simple high-level language which supports
+                    limited integer math, while-loops, if-else statements, comments and console output.
+                <p/>
+                <p>
+                    Each program's source code is compiled to bytecodes and placed into a 512-byte memory block, which the virtual
+                    machine's "cpu" operates on. The "cpu" is actually distributed across a number of isolated worker processes,
+                    which can scale across physical (or virtual) hardware. The memory blocks are stored in a central
+                    <a href="http://redis.io" target="_new">Redis</a> cache and the worker threads periodically serialize and
+                    de-serialize the blocks in order to execute code. All data from the virtual machine, such as memory, registers,
+                    disassembly and console output is streamed back to the user with websockets using a pub/sub pattern.
+                <p/>
+                <p>
+                    The virtual machine is written in Python 2.7. The simple language uses the <a href="http://www.antlr.org" target="_new">
+                    ANTLR4</a> lexer/parser. The website uses <a href="http://flask.pocoo.org/" target="_new">Flask</a> and everything
+                    is hosted on <a href="http://www.digitalocean.com" target="_new">DigitalOcean</a>.
+                </p>
+                <p>
+                    Please note: This is a toy project, used to examine various architectural ideas and patterns. It is
+                    <i>not</i> a production-like implementation of a virtual machine. That said, you are welcome to
+                    <a href="https://github.com/claustopholt/VirtualMachine/tree/Step3" target="_new">clone the source code</a>.
+                </p>
+                <p>
+                    In order to see it in action, simply edit the source code and click "Compile" or "Compile and Run".
+                </p>
+            </div>
+            <div style="width: 100%; overflow: hidden;">
+                <div style="width: 460px; float: left;">
+                    <strong>Source code</strong> (<a href="/examples" target="_new">Examples</a>)
+                    <br/>
+                    <br/>
+                    <textarea rows="15" style="width:450px" id="sourcecode">{% if sourcecode %}{{ sourcecode }}{% else %}script
 {
     a = 0;
     b = 2;
@@ -58,149 +51,148 @@
         }
     }
 }{% endif %}</textarea>
-            <br/>
-            <br/>
-            <button onclick="compile('compile');">Compile</button>
-            <button onclick="compile('compile-and-run');">Compile and Run</button>
-            <button onclick="reset();">Reset</button>
-            <i>Status: <span id="connectionStatus" />.</i>
-            <br/>
-            <br/>
-            <strong>Disassembly</strong> (<a href="/disassembly" target="_new">What is it?</a>)
-            <br/>
-            <div class="code" style="width:450px;">
-                <pre id="disassembly">
-                </pre>
+                    <br/>
+                    <br/>
+                    <button onclick="compile('compile');">Compile</button>
+                    <button onclick="compile('compile-and-run');">Compile and Run</button>
+                    <button onclick="reset();">Reset</button>
+                    <i>Status: <span id="connectionStatus" />.</i>
+                    <br/>
+                    <br/>
+                    <strong>Disassembly</strong> (<a href="/disassembly" target="_new">What is it?</a>)
+                    <br/>
+                    <div class="code" style="width:450px;">
+                        <pre id="disassembly">
+                        </pre>
+                    </div>
+                    <br/>
+                    <br/>
+
+                </div>
+
+                <div style="margin-left: 480px; width:530px">
+
+                    <strong>Live Memory</strong><br/>
+                    <div class="code">
+                        <pre id="memory">
+                        </pre>
+                    </div>
+                    <br/>
+
+                    <strong>Registers</strong><br/>
+                    <div class="code">
+                        <pre id="registers">
+                        </pre>
+                    </div>
+                    <br/>
+
+                    <strong>Console</strong><br/>
+                    <div class="code">
+                        <pre id="console">
+                        </pre>
+                    </div>
+                </div>
             </div>
-            <br/>
-            <br/>
 
-        </div>
+{% endblock %}
 
-        <div style="margin-left: 480px; width:530px">
+{% block script %}
+    <script>
 
-            <strong>Live Memory</strong><br/>
-            <div class="code">
-                <pre id="memory">
-                </pre>
-            </div>
-            <br/>
+        var message_counter = 0;
 
-            <strong>Registers</strong><br/>
-            <div class="code">
-                <pre id="registers">
-                </pre>
-            </div>
-            <br/>
-
-            <strong>Console</strong><br/>
-            <div class="code">
-                <pre id="console">
-                </pre>
-            </div>
-        </div>
-    </div>
-
-
-    <br/>
-    <br/>
-
-<script>
-
-     var message_counter = 0;
-
-    function testJSON() {
-        document.getElementById("connectionStatus").textContent = "Not connected";
-        var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
-        jsonSocket.onopen = function() {
-            console.log("JSON socket connected!");
-            document.getElementById("connectionStatus").textContent = "Connected";
-
-            // Subscribe to the various channels. Could have been done with "*:{userid}".
-            var userid = getCookie("userid");
-            jsonSocket.send(JSON.stringify(["SUBSCRIBE",
-                        "bytecodes:" + userid,
-                        "disassembly:" + userid,
-                        "console:" + userid,
-                        "mem:" + userid]));
-        };
-
-        jsonSocket.onmessage = function(messageEvent) {
-            message_counter += 1;
-            document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + message_counter;
-
-            var userid = getCookie("userid");
-            message = JSON.parse(messageEvent.data);
-
-            // Respond to messages coming in on subscribed channels.
-            if (message.SUBSCRIBE[0] == "message")
-            {
-                if(message.SUBSCRIBE[1] == "disassembly:" + userid)
-                {
-                    document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
-                }
-
-                if(message.SUBSCRIBE[1] == "console:" + userid)
-                {
-                    document.getElementById("console").textContent += message.SUBSCRIBE[2];
-                }
-
-                if(message.SUBSCRIBE[1] == "mem:" + userid)
-                {
-                    document.getElementById("memory").textContent = message.SUBSCRIBE[2];
-                }
-            }
-        };
-
-        jsonSocket.onerror = function(message) {
-            console.log("websocket to redis error:", message);
-            alert("Websocket error, please refresh page. Message: " + message)
-            document.getElementById("connectionStatus").textContent = "Error";
-        }
-
-        jsonSocket.onclose = function(message) {
-            console.log(("websocket to redis closed: ", message));
-            alert("Websocket closed, please refresh page. Message: " + message)
+        function testJSON() {
             document.getElementById("connectionStatus").textContent = "Not connected";
-        }
-    }
-    testJSON();
+            var jsonSocket = new WebSocket("ws://128.199.43.95:7379/.json");
+            jsonSocket.onopen = function() {
+                console.log("JSON socket connected!");
+                document.getElementById("connectionStatus").textContent = "Connected";
 
-    function getCookie(cookie) {
-        return document.cookie.split(';').reduce(function (prev, c) {
-            var arr = c.split('=');
-            return (arr[0].trim() === cookie) ? arr[1] : prev;
-        }, undefined);
-}
-    function compile(action) {
+                // Subscribe to the various channels. Could have been done with "*:{userid}".
+                var userid = getCookie("userid");
+                jsonSocket.send(JSON.stringify(["SUBSCRIBE",
+                            "bytecodes:" + userid,
+                            "disassembly:" + userid,
+                            "console:" + userid,
+                            "mem:" + userid]));
+            };
 
-        document.getElementById("console").textContent = "";
+            jsonSocket.onmessage = function(messageEvent) {
+                message_counter += 1;
+                document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + message_counter;
 
-        // Put sourcecode into form data.
-        var sourcecode = document.getElementById("sourcecode").value;
-        var formdata = new FormData();
-        formdata.append("sourcecode", sourcecode);
+                var userid = getCookie("userid");
+                message = JSON.parse(messageEvent.data);
 
-        // Send xhr request to web server.
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://virtualmachine.topholt.com:5000/" + action, true);
-        xhr.send(formdata);
+                // Respond to messages coming in on subscribed channels.
+                if (message.SUBSCRIBE[0] == "message")
+                {
+                    if(message.SUBSCRIBE[1] == "disassembly:" + userid)
+                    {
+                        document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
+                    }
 
-        // Handle errors (by showing an alert box).
-        xhr.onreadystatechange = function() {
-            if(this.readyState == 4) {
-                if(this.status >= 400) {
-                    alert(this.responseText);
+                    if(message.SUBSCRIBE[1] == "console:" + userid)
+                    {
+                        document.getElementById("console").textContent += message.SUBSCRIBE[2];
+                    }
+
+                    if(message.SUBSCRIBE[1] == "mem:" + userid)
+                    {
+                        document.getElementById("memory").textContent = message.SUBSCRIBE[2];
+                    }
                 }
+            };
+
+            jsonSocket.onerror = function(message) {
+                console.log("websocket to redis error:", message);
+                alert("Websocket error, please refresh page. Message: " + message)
+                document.getElementById("connectionStatus").textContent = "Error";
+            }
+
+            jsonSocket.onclose = function(message) {
+                console.log(("websocket to redis closed: ", message));
+                alert("Websocket closed, please refresh page. Message: " + message)
+                document.getElementById("connectionStatus").textContent = "Not connected";
             }
         }
-        return false;
-    }
+        testJSON();
 
-    function reset() {
-        location.reload();
+        function getCookie(cookie) {
+            return document.cookie.split(';').reduce(function (prev, c) {
+                var arr = c.split('=');
+                return (arr[0].trim() === cookie) ? arr[1] : prev;
+            }, undefined);
     }
+        function compile(action) {
 
-</script>
-</body>
-</html>
+            document.getElementById("console").textContent = "";
+
+            // Put sourcecode into form data.
+            var sourcecode = document.getElementById("sourcecode").value;
+            var formdata = new FormData();
+            formdata.append("sourcecode", sourcecode);
+
+            // Send xhr request to web server.
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://virtualmachine.topholt.com:5000/" + action, true);
+            xhr.send(formdata);
+
+            // Handle errors (by showing an alert box).
+            xhr.onreadystatechange = function() {
+                if(this.readyState == 4) {
+                    if(this.status >= 400) {
+                        alert(this.responseText);
+                    }
+                }
+            }
+            return false;
+        }
+
+        function reset() {
+            location.reload();
+        }
+
+    </script>
+
+{% endblock %}

@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>The Virtual Machine - Examples</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{%block title %}Source Code Examples{% endblock %}
+
+{% block content %}
     <h1>Source Code Examples</h1>
     <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
-        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
+        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>.</i>
         <p>
             Here a very simple program that outputs 5:
             <pre>
@@ -65,5 +63,5 @@
             Tip: Try to refresh the browser as the program runs.
         <p/>
     </div>
-</body>
-</html>
+
+{% endblock %}

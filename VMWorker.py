@@ -145,4 +145,4 @@ class VMWorker():
 
         finally:
             print("Exiting VMWorker thread.")
-            exit(0)
+            #exit(0)
