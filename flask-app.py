@@ -1,17 +1,17 @@
 import threading
-import time
 from flask import Flask
 from flask import render_template
 from flask import request
 from flask import make_response
 import worker_monitor
 import redis
-import TestLanguage
-from cpu import Cpu
 
 
 # Create Flask app.
 app = Flask(__name__)
+
+# Create a redis connection.
+redis_client = redis.StrictRedis(host="redis.topholt.com", port=6379, db=0)
 
 
 # A new user is any user that doesn't have a "userid" cookie.
@@ -24,6 +24,7 @@ def generate_userid():
 
 @app.route("/")
 def frontpage():
+
     # Check for userid cookie.
     userid_cookie = request.cookies.get("userid")
     if not userid_cookie:
@@ -91,13 +92,9 @@ def disassembly_route():
 
 
 if __name__ == "__main__":
-
     # Start worker monitor thread.
     monitor_thread = threading.Thread(target=worker_monitor.start_monitor, args=())
     monitor_thread.start()
 
-    # Create a redis connection.
-    redis_client = redis.StrictRedis(host="128.199.43.95", port=6379, db=0)
-
     # Run Flask app.
-    app.run(host="0.0.0.0", debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", debug=False, use_reloader=False)
