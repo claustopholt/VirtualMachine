@@ -66,9 +66,10 @@ class VMWorker():
                 mem_output = cpu.get_mem()
 
                 # Publish not every single step, that takes too long.
-                if counter % 1000 == 0:
+                if counter % 100 == 0:
                     # TODO: Output mem properly.
                     self.redis_client.publish("mem:{0}".format(userid), mem_output)
+                if counter % 1000 == 0:
                     self.redis_client.publish("console:{0}".format(userid), console_output)
                     console_output = ""
 

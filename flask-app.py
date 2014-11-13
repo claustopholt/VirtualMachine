@@ -10,8 +10,9 @@ import redis
 # Create Flask app.
 app = Flask(__name__)
 
-# Create a redis connection.
+# Create a Redis connection.
 redis_client = redis.StrictRedis(host="redis.topholt.com", port=6379, db=0)
+
 
 # A new user is any user that doesn't have a "userid" cookie.
 def generate_userid():

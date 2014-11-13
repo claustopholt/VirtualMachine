@@ -9,8 +9,72 @@
     <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
         <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
         <p>
-            More...
+            When a program is compiled, the result is a chunk of integer-based bytecodes that is inserted into a virtual
+            machine's memory. Each bytecode is an instruction to the "cpu" and can have zero or one integer arguments. The
+            disassembly view translates the bytecodes into human-readable form.
         <p/>
+        <p>
+            Here is the entire instruction set for the virtual machine:
+        </p>
+        <pre>
+    INSTRUCTION    VALUE    EXPLANATION
+    -----------    -----    ----------------------------------------------------------------------
+    INT            9910     Push an integer onto stack
+    ADD            9911     Pop two integers off stack, add, push result onto stack
+    SUB            9912     Pop two integers off stack, subtract, push result onto stack
+    MUL            9913     Pop two integers off stack, multiply, push result onto stack
+    DIV            9914     Pop two integers off stack, divide, push result onto stack
+    BRANCH         9930     Jump to memory address offset in code memory
+    BRANCHNE       9931     Branch if not equal
+    BRANCHEQ       9932     Branch if equal
+    BRANCHGT       9933     Branch if greater than
+    BRANCHLT       9934     Branch if less than
+    STFLD          9940     Pop one integer off stack and store in field with data memory offset x
+    LDFLD          9941     Load integer value from data memory offset x and push onto stack
+    OUTPUT         9950     Pop one value from stack and send to stdout
+    HALT           9999     Halt program execution
+        </pre>
+        <p>
+            A program written in the high level language might look like this:
+        </p>
+        <pre>    script
+    {
+        output(2 + 5);
+    }
+        </pre>
+        <p>
+            The compiler will compile that into bytecodes that can be executed in the "cpu", which is stack-based. So
+            the bytecodes, which are placed at a specific address in the virtual machine's 512-byte memory block:
+        </p>
+        <pre>
+    0080:   b626 0200       INT        2
+    0084:   b626 0500       INT        5
+    0088:   b726            ADD
+    008a:   de26            OUTPUT
+    008c:   0f27            HALT
+        </pre>
+        <p>
+            The first column is the memory address. It shows that the first instruction is stored at address 0080 (hex),
+            which is 128 in decimal.
+        </p>
+        <p>
+            Each bytecode and argument takes up 2 bytes (a WORD). The first instruction INT, represented
+            by the value 9910 (decimal) is 26B6. However, the processor is <a href="http://en.wikipedia.org/wiki/Endianness" target="_new">
+            little-endian</a> and so the bytes are shown in reverse order in the second column.
+        </p>
+        <p>
+            The third column displays any arguments to the given instruction. The first instruction has one argument, 0200 (the
+            integer 2). The remaining columns are simply a human-readable form of these bytes.
+        </p>
+        <p>
+            With that in mind, reading the bytecodes row by row, first 2 and then 5 is pushed onto the stack. The ADD instruction
+            pops both values, adds them together (7) and pushes the result onto the stack. Then, the function OUTPUT is called,
+            which pops the value 7 from the stack and outputs it to the console. Finally, the program is halted.
+        </p>
+        <p>
+            When the program is run, keep an eye on the memory view, starting at address 0080. Also keep an eye on address 0000,
+            which is where the stack resides.
+        </p>
     </div>
 
 {% endblock %}
