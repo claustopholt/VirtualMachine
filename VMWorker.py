@@ -56,20 +56,20 @@ class VMWorker():
 
                 if cpu.counter > 10000:
                     self.redis_client.publish("console:{0}".format(userid),
-                                              "Program has executed a maximum of 10.000 instructions.\r\n")
+                                              "Program exceeded the maximum of 10.000 instructions, stopping.\r\n")
                     self.redis_client.lrem("commandqueue", -1000, "compile:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
-                    raise "Max number of instructions reached."
+                    break
 
                 console_output = console_output + cpu.execute_step()
                 mem_output = cpu.get_mem()
 
                 # Publish not every single step, that takes too long.
-                if counter % 100 == 0:
+                if counter % 50 == 0:
                     # TODO: Output mem properly.
                     self.redis_client.publish("mem:{0}".format(userid), mem_output)
-                if counter % 1000 == 0:
+                if counter % 200 == 0:
                     self.redis_client.publish("console:{0}".format(userid), console_output)
                     console_output = ""
 
@@ -84,7 +84,6 @@ class VMWorker():
                     self.redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
                     self.redis_client.lpush("commandqueue", "continue:{0}".format(userid))
-
                     break
 
         except Exception:

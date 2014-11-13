@@ -7,12 +7,12 @@
     <h1>Disassembly Explained</h1>
 
     <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
-        <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>. Copyright (C) 2014, Topholt Solutions A/S. All rights reserved.</i>
+        <i>Written by <a href="http://www.topholt.com" target="_new">Claus Topholt</a>.</i>
         <p>
             When a program is compiled, the result is a chunk of integer-based bytecodes that is inserted into a virtual
             machine's memory. Each bytecode is an instruction to the "cpu" and can have zero or one integer arguments. The
             disassembly view translates the bytecodes into human-readable form.
-        <p/>
+        </p>
         <p>
             Here is the entire instruction set for the virtual machine:
         </p>
@@ -44,7 +44,7 @@
         </pre>
         <p>
             The compiler will compile that into bytecodes that can be executed in the "cpu", which is stack-based. So
-            the bytecodes, which are placed at a specific address in the virtual machine's 512-byte memory block:
+            the bytecodes, which are placed at a specific address in the virtual machine's 512-byte memory block, become:
         </p>
         <pre>
     0080:   b626 0200       INT        2
@@ -59,7 +59,7 @@
         </p>
         <p>
             Each bytecode and argument takes up 2 bytes (a WORD). The first instruction INT, represented
-            by the value 9910 (decimal) is 26B6. However, the processor is <a href="http://en.wikipedia.org/wiki/Endianness" target="_new">
+            by the value 9910 (decimal), is 26B6. However, the processor is <a href="http://en.wikipedia.org/wiki/Endianness" target="_new">
             little-endian</a> and so the bytes are shown in reverse order in the second column.
         </p>
         <p>

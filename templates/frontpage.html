@@ -5,7 +5,7 @@
 {% block content %}
             <h1>The Virtual Machine</h1>
             <div style="width: 1000px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
-                <i>Written by <a href="mailto:claus@topholt.com">Claus Topholt</a>.</i>
+                <i>Written by <a href="http://www.topholt.com" target="_new">Claus Topholt</a>.</i>
                 <p>
                     This is a demonstration of a simulated, distributed, stack-based microprocessor (a virtual machine) with a
                     hypothetical integer-only instruction set. Programs are written in a simple high-level language which supports
@@ -20,9 +20,13 @@
                     disassembly and console output is streamed back to the user with websockets using a pub/sub pattern.
                 <p/>
                 <p>
+                    The virtual machine is written in Python 2.7. The simple language is built with the ANTLR4 runtime. The website
+                    runs Flask on gunicorn and everything is hosted at DigitalOcean on two small CentOS 6.5 servers.
+                </p>
+                <p>
                     Please note: This is a toy project, used to examine various architectural ideas and patterns. It is
                     <i>not</i> a production-like implementation of a virtual machine. That said, you are welcome to
-                    <a href="https://github.com/claustopholt/VirtualMachine/tree/Step3" target="_new">clone the source code</a>.
+                    <a href="https://github.com/claustopholt/VirtualMachine/" target="_new">clone the source code</a>.
                 </p>
                 <p>
                     In order to see it in action, simply edit the source code and click "Compile" or "Compile and Run".

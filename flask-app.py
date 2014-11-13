@@ -1,9 +1,7 @@
-import threading
 from flask import Flask
 from flask import render_template
 from flask import request
 from flask import make_response
-import worker_monitor
 import redis
 
 
@@ -18,8 +16,6 @@ redis_client = redis.StrictRedis(host="redis.topholt.com", port=6379, db=0)
 def generate_userid():
     # Generate a new userid in Redis.
     userid = redis_client.incr("unique_users_count")
-
-    # TODO: Log!
     return str(userid)
 
 @app.route("/")
@@ -46,7 +42,7 @@ def frontpage():
     return resp
 
 
-# TODO: Wrapper method that checks userid cookie!
+# TODO: Wrapper method that checks userid cookie.
 @app.route("/compile", methods=["POST"])
 def compile_route():
     # Check userid. If not found, abort.
