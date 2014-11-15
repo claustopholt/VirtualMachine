@@ -1,6 +1,6 @@
 from Grammar.TestGrammarListener import TestGrammarListener
 from pprint import pprint
-from vmopcode2 import VMOpcode
+from VMOpcode import VMOpcode
 
 class MyListener(TestGrammarListener):
 
