@@ -13,8 +13,6 @@ def start_monitor():
             if not process.is_alive():
                 process_list.remove(process)
 
-                # TODO: Log
-
         # Create new processes until max number is reached.
         while len(process_list) < 3:
             worker_obj = VMWorker.VMWorker()
@@ -22,12 +20,10 @@ def start_monitor():
             new_process.start()
             process_list.append(new_process)
 
-            # TODO: Log
-
         # Sleep for a while.
         time.sleep(1)
 
 
 if __name__ == "__main__":
-
+    # This module is started up as a process either manually or by Supervisor.
     start_monitor()

@@ -9,13 +9,12 @@ from antlr4 import InputStream
 
 class MyErrorListener(ErrorListener.ErrorListener):
 
-    def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        print("ERROR!!!")
+    def syntaxError(self, recognizer, offending_symbol, line, column, msg, e):
+        # Custom error listener.
         raise Exception("{0} at line {1}".format(msg, line))
 
 
 def compile_code(sourcecode):
-
     # Create a stream for the sourcecode (ANTLR4).
     sourcecode_stream = InputStream.InputStream(sourcecode)
 
@@ -35,6 +34,4 @@ def compile_code(sourcecode):
 
     # Return the compiled bytecodes.
     return my_listener.bytecodes
-
-
 

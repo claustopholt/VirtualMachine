@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 from flask import make_response
 import redis
+from functools import wraps
 
 
 # Create Flask app.
@@ -21,7 +22,6 @@ def generate_userid():
 
 @app.route("/")
 def frontpage():
-
     # Check for userid cookie.
     userid_cookie = request.cookies.get("userid")
     if not userid_cookie:
@@ -34,14 +34,13 @@ def frontpage():
 
     # Render response from template, incl. userid cookie if not found in request.
     resp = make_response(render_template("frontpage.html", sourcecode=sourcecode))
-    if not userid_cookie:
+    if not request.cookies.get("userid"):
         resp.set_cookie("userid", userid)
 
     # Render frontpage.
     return resp
 
 
-# TODO: Wrapper method that checks userid cookie.
 @app.route("/compile", methods=["POST"])
 def compile_route():
     # Check userid. If not found, abort.
@@ -90,6 +89,5 @@ def memory_route():
 
 
 if __name__ == "__main__":
-
-    # Run Flask app.
+    # If not run in gunicorn, run app locally.
     app.run(host="0.0.0.0", debug=True, use_reloader=False)
