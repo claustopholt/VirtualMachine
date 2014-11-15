@@ -166,7 +166,6 @@ class Cpu():
                 offset = self.code_next()
                 value = self.data_get(offset)
                 self.stack_push(value)
-
             elif opcode == VMOpcode.halt:
                 raise StopIteration("Halt!")
 

@@ -14,12 +14,12 @@ execute code. All data from the virtual machine, such as memory, registers, disa
 back to the user with websockets using a pub/sub pattern.
 
 The virtual machine is written in Python 2.7. The simple language uses the [ANTLR4](http://www.antlr.org") lexer/parser. The
-website runs [Flask](http://flask.pocoo.org) on [gunicorn](http://gunicorn.org) and everything is hosted on
-[DigitalOcean](http://www.digitalocean.com).
+website runs [Flask](http://flask.pocoo.org) on [gunicorn](http://gunicorn.org) and everything is hosted at
+[DigitalOcean](http://www.digitalocean.com) on two small CentOS 6.5 servers.
 
 Please note: This is a toy project, used to examine various architectural ideas and patterns. It is
 *not* a production-like implementation of a virtual machine. That said, you are welcome to clone the source code.
 
-Pre-requisites (pip): enum34, antlr4-python2-runtime, redis and Flask.
+Pre-requisites (pip): enum, antlr4-python2-runtime, redis, Flask.
 
 ###For a running demo and a more in-depth explanation, please visit [topholt.com](http://virtualmachine.topholt.com:5000).
