@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{%block title %}Virtual Machine{% endblock %}
+{% block title %}Virtual Machine{% endblock %}
 
 {% block content %}
             <h1>The Virtual Machine</h1>
@@ -15,7 +15,7 @@
                     Each program's source code is compiled to bytecodes and placed into a 512-byte memory block, which the virtual
                     machine's "cpu" operates on. The "cpu" is actually distributed across a number of isolated worker processes,
                     which can scale across physical (or virtual) hardware. The memory blocks are stored in a central
-                    <a href="http://redis.io" target="_new">Redis</a> cache and the worker threads periodically serialize and
+                    Redis cache and the worker threads periodically serialize and
                     de-serialize the blocks in order to execute code. All data from the virtual machine, such as memory, registers,
                     disassembly and console output is streamed back to the user with websockets using a pub/sub pattern.
                 <p/>
@@ -164,9 +164,9 @@
                 var arr = c.split('=');
                 return (arr[0].trim() === cookie) ? arr[1] : prev;
             }, undefined);
-    }
-        function compile(action) {
+        }
 
+        function compile(action) {
             document.getElementById("console").textContent = "";
 
             // Put sourcecode into form data.

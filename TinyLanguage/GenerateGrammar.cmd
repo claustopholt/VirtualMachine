@@ -1,1 +1,1 @@
-java -jar antlr-4.4-complete.jar -Dlanguage=Python2 Grammar.g4
+java -jar antlr-4.4-complete.jar -Dlanguage=Python2 TinyLanguage.g4

@@ -1,6 +1,6 @@
 from antlr4 import *
-from TestGrammarLexer import TestGrammarLexer
-from TestGrammarParser import TestGrammarParser
+from TinyLanguageLexer import TinyLanguageLexer
+from TinyLanguageParser import TinyLanguageParser
 from TinyLanguageCustomListener import TinyLanguageCustomListener
 from antlr4.error import ErrorListener
 from antlr4 import InputStream
@@ -18,9 +18,9 @@ def compile_code(sourcecode):
     sourcecode_stream = InputStream.InputStream(sourcecode)
 
     # Create lexer and parser.
-    lexer = TestGrammarLexer(sourcecode_stream)
+    lexer = TinyLanguageLexer(sourcecode_stream)
     stream = CommonTokenStream(lexer)
-    parser = TestGrammarParser(stream)
+    parser = TinyLanguageParser(stream)
 
     # Add custom error listener.
     parser.addErrorListener(TinyLanguageCustomErrorListener())
