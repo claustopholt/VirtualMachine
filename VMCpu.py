@@ -11,7 +11,7 @@ class SerializableObject():
     pass
 
 
-class Cpu():
+class VMCpu():
 
     def __init__(self, code, mem_size, program_start_address, stack_start_address, data_start_address):
         # Store mem size as well as program and stack start addresses.

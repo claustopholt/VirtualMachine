@@ -2,7 +2,7 @@ import os
 import time
 import redis
 from TinyLanguage import TinyLanguage
-from cpu import Cpu
+from VMCpu import VMCpu
 
 
 class VMWorker():
@@ -27,7 +27,7 @@ class VMWorker():
         self.redis_client.publish("console:{0}".format(userid), "Compilation successful.\r\n")
 
         # Create the CPU. Store as serialized in Redis ("cpu:{userid}").
-        cpu = Cpu(bytecodes, 512, 128, 0, 384)
+        cpu = VMCpu(bytecodes, 512, 128, 0, 384)
         self.redis_client.set("cpu:{0}".format(userid), cpu.serialize_cpu())
 
         # Get disassembly and publish on "disassembly:{userid}" channel.
@@ -40,7 +40,7 @@ class VMWorker():
     def run_some_steps(self, userid):
         # Deserialize and get ready to execute.
         serialized_cpu = self.redis_client.get("cpu:{0}".format(userid))
-        cpu = Cpu([], 512, 128, 0, 384)
+        cpu = VMCpu([], 512, 128, 0, 384)
         cpu.deserialize_cpu(serialized_cpu)
 
         # Execute.
