@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{%block title %}Live Memory{% endblock %}
+
+{% block content %}
+    <h1>Live Memory Explained</h1>
+    <div style="width: 1010px; background: #EFEFEF; font-size: 16px; padding: 5px; margin-bottom: 20px;">
+        <i>Written by <a href="http://www.topholt.com" target="_new">Claus Topholt</a>.</i>
+        <p>
+            <a href="/"><-- Go back to the virtual machine</a>
+        </p>
+        <p>
+            The live memory view is a representation of the virtual machine's memory. When compiled, each program gets its
+            own 512-byte memory block that is stored in a central Redis cache. The memory block contains everything the
+            "cpu" needs to execute the program: An area dedicated to the stack, an area dedicated to bytecodes and an area
+            dedicated to data (variables).
+        </p>
+        <p>
+            The stack resides at memory address 0000. A stack pointer is incremented and decremented as things are pushed
+            onto the stack and popped from it. For performance reasons, the stack data is not "wiped" after each pop, so
+            it is possible to follow along as the program executes (except it goes really fast).
+        </p>
+        <p>
+            The compiled bytecodes reside at memory address 0080 (hex). It's easy to spot because it's usually the most
+            filled-out part of memory. The disassembly view takes these bytecodes and presents them in a human-readable
+            form.
+        </p>
+        <p>
+            The data memory (all variables) reside at address 0180 (hex). During compilation, the compiler allocates two
+            bytes per variable, one after the other. So the first declared variable gets spot 0180, the next 0182 and so on.
+        </p>
+        <p>
+            <i>Hacker's corner: If the data memory had been placed a slightly differently, it would be easy to affect
+                the program while it is running (by injecting fresh bytecodes through the stack, a buffer overflow). As it
+                stands, it's still possible to inject code but it requires a different technique. Let me know if you figure
+                it out :-)</i>
+        </p>
+        <p>
+            <a href="/"><-- Go back to the virtual machine</a>
+        </p>
+    </div>
+
+{% endblock %}

@@ -18,6 +18,7 @@ def generate_userid():
     userid = redis_client.incr("unique_users_count")
     return str(userid)
 
+
 @app.route("/")
 def frontpage():
 
@@ -31,10 +32,8 @@ def frontpage():
     # Get latest sourcecode from Redis ("sourcecode:{userid}").
     sourcecode = redis_client.get("sourcecode:{0}".format(userid))
 
-    # Render response from template.
+    # Render response from template, incl. userid cookie if not found in request.
     resp = make_response(render_template("frontpage.html", sourcecode=sourcecode))
-
-    # Set cookie if it wasn't present in the request.
     if not userid_cookie:
         resp.set_cookie("userid", userid)
 
@@ -77,14 +76,17 @@ def compile_and_run_route():
 
 @app.route("/examples")
 def examples_route():
-    # Render response from template.
     return render_template("examples.html")
 
 
 @app.route("/disassembly")
 def disassembly_route():
-    # Render response from template.
     return render_template("disassembly.html")
+
+
+@app.route("/memory")
+def memory_route():
+    return render_template("memory.html")
 
 
 if __name__ == "__main__":

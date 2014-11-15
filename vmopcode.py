@@ -16,5 +16,3 @@ class VMOpcode(Enum):
     ldfld = 9941          # Load integer value from data memory offset x and push onto stack
     output = 9950         # pop one value from stack and send to stdout
     halt = 9999           # halt program execution
-
-
