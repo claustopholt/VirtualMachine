@@ -1,8 +1,8 @@
-from Grammar.TestGrammarListener import TestGrammarListener
-from pprint import pprint
+from TestGrammarListener import TestGrammarListener
 from VMOpcode import VMOpcode
 
-class MyListener(TestGrammarListener):
+
+class TinyLanguageCustomListener(TestGrammarListener):
 
     def __init__(self):
         self.variable_names = []

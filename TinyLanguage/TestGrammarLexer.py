@@ -120,7 +120,7 @@ class TestGrammarLexer(Lexer):
                   u"GT", u"GTE", u"LT", u"LTE", u"INC", u"DEC", u"COMMENT", 
                   u"WHITESPACE" ]
 
-    grammarFileName = u"TestGrammar.g4"
+    grammarFileName = u"Grammar.g4"
 
     def __init__(self, input=None):
         super(TestGrammarLexer, self).__init__(input)

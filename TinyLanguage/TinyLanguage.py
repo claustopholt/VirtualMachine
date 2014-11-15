@@ -1,13 +1,12 @@
-from pprint import pprint
 from antlr4 import *
-from Grammar.TestGrammarLexer import TestGrammarLexer
-from Grammar.TestGrammarParser import TestGrammarParser
-from Grammar.MyListener import MyListener
+from TestGrammarLexer import TestGrammarLexer
+from TestGrammarParser import TestGrammarParser
+from TinyLanguageCustomListener import TinyLanguageCustomListener
 from antlr4.error import ErrorListener
 from antlr4 import InputStream
 
 
-class MyErrorListener(ErrorListener.ErrorListener):
+class TinyLanguageCustomErrorListener(ErrorListener.ErrorListener):
 
     def syntaxError(self, recognizer, offending_symbol, line, column, msg, e):
         # Custom error listener.
@@ -24,11 +23,11 @@ def compile_code(sourcecode):
     parser = TestGrammarParser(stream)
 
     # Add custom error listener.
-    parser.addErrorListener(MyErrorListener())
+    parser.addErrorListener(TinyLanguageCustomErrorListener())
 
     # Walk the tree.
     tree = parser.script()
-    my_listener = MyListener()
+    my_listener = TinyLanguageCustomListener()
     walker = ParseTreeWalker()
     walker.walk(my_listener, tree)
 
