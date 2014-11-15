@@ -1,8 +1,8 @@
-from Grammar.TestGrammarListener import TestGrammarListener
-from pprint import pprint
+from TinyLanguageListener import TinyLanguageListener
 from VMOpcode import VMOpcode
 
-class MyListener(TestGrammarListener):
+
+class TinyLanguageCustomListener(TinyLanguageListener):
 
     def __init__(self):
         self.variable_names = []
@@ -33,10 +33,6 @@ class MyListener(TestGrammarListener):
 
     def exitScript(self, ctx):
         self.bytecodes.append(VMOpcode.halt.value)
-
-        #print(self.context_properties)
-        #print(self.labels)
-        #print(self.bytecodes)
 
     #endregion
 

@@ -1,8 +1,8 @@
 /*
-    Test grammar.
+    Grammar for TinyLanguage.
  */
 
-grammar TestGrammar;
+grammar TinyLanguage;
 
 
 // Parser rules.

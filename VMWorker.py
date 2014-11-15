@@ -1,7 +1,7 @@
 import os
 import time
 import redis
-import TestLanguage
+from TinyLanguage import TinyLanguage
 from cpu import Cpu
 
 
@@ -21,7 +21,7 @@ class VMWorker():
         self.redis_client.set("sourcecode:{0}".format(userid), sourcecode)
 
         # Compile sourcecode written in browser. Store in Redis ("bytecodes:{userid}").
-        bytecodes = TestLanguage.compile_code(sourcecode)
+        bytecodes = TinyLanguage.compile_code(sourcecode)
         self.redis_client.set("bytecodes:{0}".format(userid), bytecodes)
 
         self.redis_client.publish("console:{0}".format(userid), "Compilation successful.\r\n")
