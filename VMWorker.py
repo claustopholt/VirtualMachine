@@ -43,10 +43,9 @@ class VMWorker():
         cpu = Cpu([], 512, 128, 0, 384)
         cpu.deserialize_cpu(serialized_cpu)
 
+        # Execute.
         self.redis_client.publish("console:{0}".format(userid),
                                   "Worker {0} deserialized cpu and will execute some code.\r\n".format(self.pid))
-
-        # Execute.
         counter = 0
         try:
             console_output = ""
@@ -62,32 +61,32 @@ class VMWorker():
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
                     break
 
+                # Get console and mem output from cpu.
                 console_output = console_output + cpu.execute_step()
                 mem_output = cpu.get_mem()
 
                 # Publish not every single step, that takes too long.
                 if counter % 50 == 0:
-                    # TODO: Output mem properly.
                     self.redis_client.publish("mem:{0}".format(userid), mem_output)
                 if counter % 200 == 0:
                     self.redis_client.publish("console:{0}".format(userid), console_output)
                     console_output = ""
-
-                # TODO: Timeslices instead of op counters? Simple to implement!
                 if counter >= 2000:
                     # Serialize cpu.
                     self.redis_client.set("cpu:{0}".format(userid), cpu.serialize_cpu())
 
                     # Send queuecommand to continue executing.
-                    # TODO: Separate command, not compile-and-run!!!
                     self.redis_client.lrem("commandqueue", -1000, "compile:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "compile-and-run:{0}".format(userid))
                     self.redis_client.lrem("commandqueue", -1000, "continue:{0}".format(userid))
                     self.redis_client.lpush("commandqueue", "continue:{0}".format(userid))
                     break
 
+        except StopIteration:
+            self.redis_client.publish("console:{0}".format(userid), "Program execution finished.")
+
         except Exception:
-            print("Program ended. Crash?")
+            print("Program ended.")
 
         finally:
             # Output any remaining console output.
