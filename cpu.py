@@ -3,7 +3,7 @@ import io
 import struct
 import json
 import pickle
-from vmopcode import VMOpcode
+from vmopcode2 import VMOpcode
 
 
 class SerializableObject():
