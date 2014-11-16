@@ -82,6 +82,7 @@ def compile_and_run_route():
 
 @app.route("/examples")
 def examples_route():
+    VMLogger.log_info2("Example route " + request.remote_addr)
     return render_template("examples.html")
 
 
