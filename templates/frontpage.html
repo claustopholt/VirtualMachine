@@ -176,7 +176,7 @@
 
             // Send xhr request to web server.
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://virtualmachine.topholt.com:5000/" + action, true);
+            xhr.open("POST", "/" + action, true);
             xhr.send(formdata);
 
             // Handle errors (by showing an alert box).
