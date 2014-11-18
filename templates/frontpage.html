@@ -108,17 +108,16 @@
             setTimeout(function() {
                 if (!websocket_connected)
                 {
-                    // TODO: Set timeout appropriately.
-                    // Websocket did not connect within 2 seconds, fallback to chunked transfer encoding.
-                    //jsonSocket.close();
+                    // Websocket did not connect within 1.5 seconds, fallback to chunked transfer encoding.
+                    jsonSocket.close();
                     establishChunkedTransferEncoding();
                 }
-            }, 2000);
+            }, 1500);
 
             jsonSocket.onopen = function() {
                 console.log("JSON socket connected!");
                 websocket_connected = true;
-                document.getElementById("connectionStatus").textContent = "Connected";
+                document.getElementById("connectionStatus").textContent = "Connected (Websocket)";
 
                 // Subscribe to the various channels. Could have been done with "*:{userid}".
                 var userid = getCookie("userid");
@@ -130,12 +129,14 @@
             };
 
             jsonSocket.onmessage = function(messageEvent) {
-                message_counter += 1;
-                document.getElementById("registers").textContent = "WebSocket messages received from Redis: " + message_counter;
+                var message_json = JSON.parse(messageEvent.data);
 
-                var message = JSON.parse(messageEvent.data);
+                var sub_message = Object();
+                sub_message.type = message_json.SUBSCRIBE[0];
+                sub_message.channel = message_json.SUBSCRIBE[1];
+                sub_message.data = message_json.SUBSCRIBE[message_json.SUBSCRIBE.length - 1];
 
-                processMessage(message);
+                processMessage(sub_message);
             };
 
             jsonSocket.onerror = function(message) {
@@ -157,10 +158,11 @@
 
         function establishChunkedTransferEncoding() {
             console.log("Falling back to chunked transfer encoding.");
-            document.getElementById("connectionStatus").textContent = "Connected (longpoll)";
+            document.getElementById("connectionStatus").textContent = "Connected (chunked)";
 
             var userid = getCookie("userid");
             var previous_response_length = 0;
+            var receive_buffer = "";
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "http://redis.topholt.com/PSUBSCRIBE/*:" + userid, true);
@@ -170,35 +172,55 @@
                     var response = xhr.responseText;
                     var chunk = response.slice(previous_response_length);
                     previous_response_length = response.length;
-                    console.log(chunk);
+                    receive_buffer += chunk;
+                    //console.log(receive_buffer)
+                    while(true) {
+                        index = receive_buffer.indexOf("]}");
+                        if (index > 0) {
+                            var message_raw = receive_buffer.substr(0, index + 2);
+                            receive_buffer = receive_buffer.substr(index + 2, 99999);
+                            //console.log(message_raw);
 
-                    // TODO: Combine chunks and look for full messages. Parse and send to processMessage.
-                    // TODO: Maybe create a common message object because PSUBSCRIBE and SUBSCRIBE messages aren't the same.
+                            var message_json = JSON.parse(message_raw)
+                            var sub_message = Object();
+                            sub_message.type = message_json.PSUBSCRIBE[0];
+                            sub_message.channel = message_json.PSUBSCRIBE[2];   // TODO: This isn't totally correct!
+                            sub_message.data = message_json.PSUBSCRIBE[message_json.PSUBSCRIBE.length - 1];
+                            //console.log(sub_message);
+                            processMessage(sub_message);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                 }
             };
             xhr.send(null);
         }
 
         function processMessage(message) {
+            message_counter += 1;
+            document.getElementById("registers").textContent = "Messages received from Redis: " + message_counter;
+
             var userid = getCookie("userid");
 
             // Respond to messages coming in on subscribed channels.
-            if (message.SUBSCRIBE[0] == "message")
+            if (message.type == "message" || message.type == "pmessage")
             {
-                if(message.SUBSCRIBE[1] == "disassembly:" + userid)
+                if(message.channel == "disassembly:" + userid)
                 {
-                    document.getElementById("disassembly").textContent = message.SUBSCRIBE[2];
+                    document.getElementById("disassembly").textContent = message.data;
                 }
 
-                if(message.SUBSCRIBE[1] == "console:" + userid)
+                if(message.channel == "console:" + userid)
                 {
-                    console.log(message.SUBSCRIBE[2]);
-                    document.getElementById("console").textContent += message.SUBSCRIBE[2];
+                    document.getElementById("console").textContent += message.data;
                 }
 
-                if(message.SUBSCRIBE[1] == "mem:" + userid)
+                if(message.channel == "mem:" + userid)
                 {
-                    document.getElementById("memory").textContent = message.SUBSCRIBE[2];
+                    document.getElementById("memory").textContent = message.data;
                 }
             }
         }
