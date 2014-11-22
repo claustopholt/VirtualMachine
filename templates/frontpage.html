@@ -103,7 +103,7 @@
 
         function testJSON() {
             document.getElementById("connectionStatus").textContent = "Not connected";
-            var jsonSocket = new WebSocket("ws://redis.topholt.com:7379/.json");
+            var jsonSocket = new WebSocket("ws://redis.topholt.com/");
             jsonSocket.onopen = function() {
                 console.log("JSON socket connected!");
                 document.getElementById("connectionStatus").textContent = "Connected";
